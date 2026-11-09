@@ -1,0 +1,13 @@
+requests>=2.31
+feedparser>=6.0
+PyYAML>=6.0
+python-docx>=1.1
+openpyxl>=3.1
+pandas>=2.0
+streamlit>=1.45
+pydeck>=0.9
+altair>=5.0
+websockets>=13.0   # AIS (aisstream.io)
+telethon>=1.36     # Telegram channels
+praw>=7.7          # only needed once Reddit access is approved
+pytest>=8.0

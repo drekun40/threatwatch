@@ -1,0 +1,68 @@
+# Precision filters (edit by hand; the dashboard doesn't change this file).
+
+# Phrases that contain "Buffalo" but don't mean the city. They are ignored when deciding whether
+# an item is about the Buffalo area (they never block a named-site match).
+not_buffalo:
+  - water buffalo
+  - buffalo wing
+  - buffalo wings
+  - buffalo chicken
+  - buffalo sauce
+  - Buffalo Wild Wings
+  - Buffalo Trace
+  - Buffalo Exchange
+  - buffalo plaid
+  - Buffalo, Minnesota
+  - Buffalo, Minn
+  - Buffalo, Wyoming
+  - Buffalo, Wyo
+  - Buffalo, Texas
+  - Buffalo, Missouri
+  - Buffalo, Iowa
+  - Buffalo Grove
+  - Buffalo County
+  - Buffalo Soldiers
+  - Buffalo Bill Cody
+  # outlet names: an outlet's own name is not a location
+  - News 4 Buffalo
+  - 7 News Buffalo
+  - The Buffalo News
+  - Buffalo News
+  - Buffalo Rising
+  - Buffalo Business First
+  - Spectrum News Buffalo
+  - Spectrum News 1 Buffalo
+  - WGRZ Buffalo
+  - Buffalo Toronto Public Media
+
+# Wording that usually means coverage of something past, legal, or not a live threat. Each item that
+# contains one gets the penalty below; it stays in the log and an analyst can still escalate it.
+dampeners:
+  penalty: 15
+  terms:
+    - lawsuit
+    - suing
+    - sued
+    - sentenced
+    - sentencing
+    - pleaded guilty
+    - pleads guilty
+    - convicted
+    - verdict
+    - indicted
+    - arraigned
+    - arraignment
+    - years ago
+    - anniversary
+    - remembered
+    - remembering
+    - documentary
+    - movie
+    - film review
+    - book review
+    - video game
+    - fantasy football
+    - trivia
+    - recap
+    - throwback
+    - podcast

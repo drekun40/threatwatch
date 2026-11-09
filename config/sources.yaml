@@ -1,0 +1,132 @@
+# Which sources run, and how.
+# Credentials live in .env, never in this file.
+
+scan:
+  lookback_hours: 24          # ignore anything older than this on each scan
+  corroboration_window_hours: 12
+  parallel_sources: 8         # sources collected at the same time
+  base_hours: [7, 15]         # hourly schedule (scan --auto) always scans at these local hours…
+  event_before_hours: 6       # …and every hour from 6 h before an event at a site
+  event_after_hours: 3        # …until 3 h after it starts
+  alert_followup_hours: 6     # …and for 6 h after an open alert
+  max_seconds: 300            # a source still running after this is skipped for this scan (reported as timed out)
+
+tiers:                        # score thresholds (see threatwatch/scoring.py, tier_for)
+  act: 85                     # Act now: score >= act at a monitored site AND (corroborated OR source in act_reliability)
+  act_reliability: [A, B]     # source types trusted enough for Act now without corroboration
+  alert: 70                   # sends Teams/email immediately
+  event_bonus: 5              # added when a hit falls within ±6 h of a scheduled event at that venue
+  watch: 40                   # goes in the report, flagged for analyst review
+  # anything below "watch" is logged only
+
+sources:
+  news:                       # Google + Bing News search per facility, threat sweeps, local outlet feeds. Free, no key.
+    enabled: true
+    google_news: true
+    bing_news: true           # second search index; links go straight to the publisher
+    threat_sweeps: true       # high-severity terms + "Buffalo"/"Erie County", catches incidents that don't name a site
+    sweep_min_weight: 8
+    names_per_site: 3
+    parallel: 8               # simultaneous requests
+    extra_queries: []         # your own searches, e.g.  - '"Main Street" Buffalo police'
+    feeds:                    # local outlet RSS — check each URL loads; outlets move feeds occasionally
+      - name: WGRZ (NBC 2)
+        url: https://www.wgrz.com/feeds/syndication/rss/news/local
+        reliability: B
+      - name: WKBW (7 News)
+        url: https://www.wkbw.com/news/local-news.rss
+        reliability: B
+      - name: WIVB (News 4)
+        url: https://www.wivb.com/news/local-news/feed/
+        reliability: B
+      - name: Investigative Post
+        url: https://www.investigativepost.org/feed/
+        reliability: B
+      - name: Spectrum News Buffalo
+        url: https://spectrumlocalnews.com/services/contentfeed.nys%7Cbuffalo%7Cnews.landing.rss
+        reliability: B
+      - name: WIVB (all news)
+        url: https://www.wivb.com/feed/
+        reliability: B
+      - name: WKBW (all news)
+        url: https://www.wkbw.com/news.rss
+        reliability: B
+      - name: Buffalo Rising
+        url: https://www.buffalorising.com/feed/
+        reliability: C
+      - name: FBI Buffalo
+        url: https://www.fbi.gov/feeds/buffalo-news/rss.xml
+        reliability: A
+
+  gdelt:                      # GDELT global news index (updates every 15 min). Free, no key; ~1 query per 5 s.
+    enabled: true
+    max_records: 75
+    min_interval_hours: 3     # GDELT throttles hard; once every 3 h is plenty for a 15-minute index
+    extra_queries: []
+
+  tfr:                        # FAA temporary flight restrictions over the Buffalo area (VIP/security). Free, no key.
+    enabled: true
+
+  mastodon:                   # Public Mastodon hashtag timelines. Free, no key.
+    enabled: true
+    instances: ["mastodon.social", "mastodon.online", "mstdn.social"]
+    tags: ["buffalo", "buffalony", "wny", "buffalobills", "sabres", "eriecounty"]
+    pages: 2
+
+  nws:                        # National Weather Service alerts for Erie County + Lake Erie marine zone. Free.
+    enabled: true
+    zones: ["NYC029", "NYZ010", "NYZ019", "LEZ020"]   # Erie County, northern/southern Erie, Buffalo harbor marine zone
+
+  bluesky:                    # Public posts. Free; needs a Bluesky handle + app password in .env.
+    enabled: true
+    per_query_limit: 50
+
+  opendata:                   # Buffalo Police incidents (Open Data Buffalo). Free; optional SOCRATA_APP_TOKEN.
+    enabled: true
+    lookback_hours: 96        # BPD data is published with a lag
+    geofence_buffer_km: 0.1   # only incidents inside a facility geofence (+buffer) are kept
+
+  ny511:                      # 511NY crashes/closures/incidents. Free key: NY511_API_KEY.
+    enabled: true
+    geofence_buffer_km: 0.4
+    skip_types: ["construction", "roadwork", "special event"]
+
+  schedules:                  # Sabres + Bills home games (free, no key) and your own list in config/events.yaml.
+    enabled: true
+    days_ahead: 14
+    teams: ["sabres", "bills"]
+
+  events:                     # Ticketmaster concerts/shows at venues (crowd context). Free key: TICKETMASTER_API_KEY.
+    enabled: true
+    days_ahead: 14
+
+  telegram:                   # Public channels you list. Free: TELEGRAM_API_ID/HASH + one-time login.
+    enabled: true
+    per_channel_limit: 200
+    channels: []              # e.g.  - {username: somelocalnewschannel, reliability: C, local: true}
+
+  youtube:                    # Geotagged videos/livestreams near sites + keyword searches. Free key: YOUTUBE_API_KEY.
+    enabled: true
+    queries: ["Buffalo NY shooting", "Buffalo NY police", "Canalside Buffalo", "Highmark Stadium"]
+
+  adsb:                       # Low-flying aircraft/helicopters over sites. Free, no key.
+    enabled: true
+    radius_nm: 15
+    max_alt_ft: 2000          # barometric; Buffalo ground level is ~600 ft
+    geofence_buffer_km: 0.5
+    airport_exclusion_km: 6   # ignore normal BUF approach/departure traffic
+
+  ais:                        # Vessels on the waterfront. Free key: AISSTREAM_API_KEY.
+    enabled: true
+    listen_seconds: 60
+    harbor_speed_kn: 20
+
+  reddit:                     # Needs Reddit API approval (Responsible Builder Policy) — enable once approved.
+    enabled: false
+    subreddits: ["Buffalo", "WNY", "buffalobills", "sabres"]
+    per_query_limit: 50
+
+  x:                          # Pay-per-use X API. Disabled until budget approved.
+    enabled: false
+    monthly_read_cap: 30000   # hard stop to control spend (~$5 per 1,000 reads)
+    use_geo: true             # adds point_radius queries per facility if your access supports it

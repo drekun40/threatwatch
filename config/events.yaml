@@ -1,0 +1,13 @@
+# Events you add yourself (concerts, festivals, rallies, conventions...). Also editable in the dashboard
+# (Sites tab > Events). Shown under "Upcoming events" for the next 14 days and used for the event-day bonus.
+#
+# site:  a site id from facilities.yaml (canalside, keybank_center, outer_harbor, convention_center, ...)
+# start: local Buffalo time, "YYYY-MM-DD HH:MM"
+#
+# events:
+#   - name: Fall Concert Series
+#     site: riverworks
+#     start: "2026-10-24 20:00"
+#     venue: Buffalo RiverWorks
+#     url: https://buffaloriverworks.com/
+events: []

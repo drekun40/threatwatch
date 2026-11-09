@@ -1,0 +1,12 @@
+# secrets and local state never go in version control
+.env
+config/sources.local.yaml
+.venv/
+data/
+exports/
+reports/
+__pycache__/
+*.pyc
+.DS_Store
+.pytest_cache/
+.streamlit/secrets.toml

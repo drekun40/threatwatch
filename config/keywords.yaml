@@ -1,0 +1,463 @@
+# Threat keywords, grouped by category.
+# Edit here or in the dashboard (Keywords tab) — the dashboard writes back to this file.
+#
+# weight:  how serious a hit in this category is (0–10).
+#          Categories with weight 0 are "context" — they never trigger a hit on their own,
+#          but they add to the score when they appear with a threat term.
+# terms:   matched case-insensitively on word boundaries; simple plurals (s/es) match automatically.
+#          Write "fight" and you also get "fights"; "gunshot" also gets "gunshots".
+
+categories:
+  explosives_terrorism:
+    label: Explosives & terrorism
+    weight: 10
+    terms:
+    - bomb threat
+    - pipe bomb
+    - suspicious package
+    - suspicious device
+    - IED
+    - explosive
+    - explosion
+    - terrorism
+    - terrorist
+    - evacuated
+    - evacuation
+    - bomb
+    - bomb squad
+    - detonation
+    - detonated
+    - unattended bag
+    - unattended package
+    - suspicious bag
+    - suspicious vehicle
+    - hazmat
+    - chemical spill
+    - white powder
+    - evacuation order
+    - terror attack
+    - jihad
+    - ISIS
+  weapons_violence:
+    label: Weapons & violence
+    weight: 9
+    terms:
+    - shooting
+    - shots-fired
+    - man shot
+    - woman shot
+    - teen shot
+    - was shot
+    - were shot
+    - fatally shot
+    - shot multiple times
+    - shot several times
+    - shooter
+    - active shooter
+    - gunshot
+    - shots fired
+    - stabbing
+    - stabbed
+    - assault
+    - violent incident
+    - youth violence
+    - fight
+    - brawl
+    - homicide
+    - ShotSpotter
+    - gun
+    - gunfire
+    - gunman
+    - firearm
+    - armed man
+    - armed suspect
+    - man with a gun
+    - brandished
+    - knife
+    - machete
+    - pistol
+    - rifle
+    - shots rang out
+    - drive-by
+    - murder
+    - carjacking
+    - armed robbery
+    - beaten
+    - fistfight
+    - pepper spray
+    - shot and killed
+    - stabbed to death
+    - killed in a shooting
+  vehicle:
+    label: Vehicle incidents
+    weight: 8
+    terms:
+    - vehicular ramming
+    - vehicle ramming
+    - drove into crowd
+    - car crash
+    - crash
+    - lost control
+    - losing control
+    - hit and run
+    - accident
+    - vehicle collision
+    - wrong-way driver
+    - pedestrian struck
+    - struck by a vehicle
+    - hit by a car
+    - rollover
+    - multi-vehicle
+    - fatal crash
+    - DWI
+    - drunk driver
+    - police chase
+    - pursuit
+    - vehicle into crowd
+  crowd_safety:
+    label: Crowd safety
+    weight: 7
+    terms:
+    - crowd density
+    - overcrowding
+    - overcrowded
+    - crowd crush
+    - stampede
+    - panic
+    - panic movement
+    - crowd control
+    - medical emergency
+    - overdose
+    - unconscious
+    - crowd surge
+    - crush
+    - trampled
+    - pushing and shoving
+    - fainted
+    - heat exhaustion
+    - cardiac arrest
+    - CPR
+    - missing child
+    - lost child
+    - ambulance
+    - EMS
+  public_order:
+    label: Public order & protest
+    weight: 6
+    terms:
+    - protest
+    - protesters
+    - demonstration
+    - rally
+    - riot
+    - disorderly conduct
+    - politically motivated
+    - counter-protest
+    - juvenile
+    - teens
+    - takeover
+    - alcohol
+    - drunk
+    - sit-in
+    - blockade
+    - clash
+    - clashes
+    - unrest
+    - mob
+    - looting
+    - arrested
+    - arrests
+    - heavy police presence
+    - disturbance
+    - rowdy
+    - unruly
+    - ejected
+    - street takeover
+    - car meet
+    - pop-up party
+    - trespass notice
+    - picket
+  property_access:
+    label: Property & access
+    weight: 5
+    terms:
+    - vandalism
+    - vandalized
+    - graffiti
+    - trespassing
+    - trespasser
+    - break-in
+    - arson
+    - structure fire
+    - fire alarm
+    - smoke
+    - break in
+    - broken into
+    - stolen
+    - theft
+    - window smashed
+    - damaged
+    - fence cut
+    - unauthorized access
+    - squatters
+  critical_infrastructure:
+    label: Critical infrastructure
+    weight: 8
+    terms:
+    - critical infrastructure
+    - maritime infrastructure
+    - transportation infrastructure
+    - power outage
+    - bridge closed
+    - rail disruption
+    - derailment
+    - sabotage
+    - full closure
+    - bridge closure
+    - road closed
+    - outage
+    - water main break
+    - gas leak
+    - bridge strike
+    - bridge damage
+    - signal outage
+    - train delay
+    - Amtrak
+    - CSX
+    - Peace Bridge
+    - border crossing
+    - NFTA
+    - Metro Rail
+    - substation
+    - transformer fire
+    - pipeline
+  maritime:
+    label: Maritime & waterfront
+    weight: 7
+    terms:
+    - boating incident
+    - boating accident
+    - vessel collision
+    - capsized
+    - capsized vessel
+    - man overboard
+    - drowning
+    - water rescue
+    - Coast Guard
+    - aground
+    - not under command
+    - high-speed vessel
+    - stationary vessel
+    - vessel loitering
+    - Coast Guard search
+    - missing boater
+    - swimmer missing
+    - rip current
+    - ice rescue
+    - fell through the ice
+    - jet ski
+    - kayak
+    - vessel fire
+    - oil spill
+    - harbor closure
+    - marine incident
+    - breakwall
+    - pulled from the water
+  aerial:
+    label: Drones & aerial
+    weight: 6
+    terms:
+    - drone
+    - drones
+    - UAS
+    - unauthorized drone
+    - low-flying aircraft
+    - loitering aircraft
+    - temporary flight restriction
+    - helicopter
+    - drone sighting
+    - flight restriction
+    - TFR
+    - airspace violation
+    - banner plane
+    - paramotor
+    - low flying
+    - police helicopter
+    - Mercy Flight
+  reported_crime:
+    label: Police-reported crime
+    weight: 5
+    terms:
+    - robbery
+    - burglary
+    - breaking & entering
+    - larceny
+    - theft of vehicle
+    - criminal mischief
+    - assault
+    - harassment
+    - menacing
+    - criminal possession
+    - weapon possession
+    - shoplifting
+    - trespassing arrest
+    - disorderly
+  hate_extremism:
+    label: Hate & extremism
+    weight: 9
+    terms:
+    - antisemitic
+    - antisemitism
+    - hate crime
+    - swastika
+    - extremist
+    - manifesto
+    - hate speech
+    - neo-Nazi
+    - white supremacist
+    - Proud Boys
+    - militia
+    - extremism
+    - bias incident
+    - Nazi
+    - hate symbol
+    - Tops shooting
+  weather_visibility:
+    label: Weather & visibility
+    weight: 4
+    terms:
+    - low visibility
+    - visibility
+    - fog
+    - lake effect
+    - high winds
+    - gale warning
+    - seiche
+    - winter storm
+    - blizzard
+    - snow emergency
+    - travel ban
+    - tornado warning
+    - severe thunderstorm
+    - flash flood
+    - lakeshore flood
+    - wind advisory
+    - ice storm
+    - whiteout
+    - freezing fog
+    - storm surge
+  watch_entities:
+    label: Watch entities & media
+    weight: 3
+    terms:
+    - AEROCINE Films
+    - Aerocine
+    - private film company
+    - film crew
+    - filming
+    - media attention
+    - news crew
+    - TV crew
+    - livestream
+    - live stream
+    - viral video
+    - influencer
+  direct_threats:
+    label: Direct threats
+    weight: 10
+    terms:
+    - threat against
+    - threatened to
+    - death threat
+    - threatening message
+    - threatening letter
+    - shoot up
+    - threatened to blow up
+    - going to blow up
+    - kill everyone
+    - swatting
+    - swatted
+    - hoax call
+    - credible threat
+    - threat made
+    - online threat
+    - school threat
+    - hit list
+  emergency_response:
+    label: Emergency response
+    weight: 8
+    terms:
+    - lockdown
+    - shelter in place
+    - SWAT
+    - police standoff
+    - barricaded
+    - hostage
+    - manhunt
+    - mass casualty
+    - multiple victims
+    - active threat
+    - evacuate
+    - evacuating
+    - emergency crews
+    - first responders
+    - police activity
+  cyber:
+    label: Cyber & doxxing
+    weight: 6
+    terms:
+    - cyberattack
+    - cyber attack
+    - ransomware
+    - data breach
+    - hacked
+    - DDoS
+    - doxxing
+    - doxxed
+    - phishing
+    - systems down
+    - IT outage
+    - ticketing outage
+  election_security:
+    label: Election security
+    weight: 7
+    terms:
+    - poll worker
+    - polling place
+    - voter intimidation
+    - election fraud
+    - ballot drop box
+    - ballot tampering
+    - voting machines tampered
+    - election worker threatened
+  context:
+    label: Context (boosts only)
+    weight: 0
+    terms:
+    - waterfront
+    - Outer Harbor
+    - Canal
+    - Marine Drive
+    - Boardwalk Carnival
+    - concert
+    - vessel
+    - boat
+    - naval ships
+    - naval museum
+    - Bills game
+    - Sabres game
+    - fireworks
+    - festival
+    - tailgate
+    - parking lot
+    - game day
+    - playoff
+    - parade
+    - fireworks show
+    - Taste of Buffalo
+    - food truck
+    - ice rink
+    - concert series
+    - sold out
+    - watch party
+    - home opener

@@ -1,0 +1,16 @@
+[theme]
+base = "light"
+primaryColor = "#007AFF"
+backgroundColor = "#F5F5F7"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1D1D1F"
+
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
+
+[server]
+# Only reachable from this Mac, not from others on the same Wi-Fi.
+address = "localhost"

@@ -1,0 +1,320 @@
+# Monitored facilities — Buffalo / Erie County, NY
+#
+# aliases:       names people actually use. Matched case-insensitively on word boundaries.
+# ambiguous:     aliases that are too generic on their own ("the Arena", "City Hall").
+#                They only count when the post also mentions Buffalo / a Buffalo context term.
+# lat/lon:       APPROXIMATE centre points — verify on a map before enabling X geo search.
+# radius_km:     geofence radius used by geo-capable sources (X later).
+# priority:      1 = highest. Raises the score of hits at this facility.
+
+context_terms:   # words that confirm a post is about Buffalo (used for ambiguous aliases)
+  - Buffalo
+  - BUF
+  - WNY
+  - Western New York
+  - Erie County
+  - "716"
+  - Orchard Park
+  - Getzville
+  - Amherst
+
+facilities:
+  - id: broadway_market
+    name: Broadway Market
+    short: "Broadway Mkt"
+    address: 999 Broadway, Buffalo, NY 14212
+    lat: 42.8907
+    lon: -78.8346
+    radius_km: 0.5
+    priority: 3
+    aliases: ["Broadway Market"]
+    ambiguous: []
+
+  - id: central_terminal
+    name: Central Terminal
+    short: "Central Terminal"
+    address: 495 Paderewski Dr, Buffalo, NY 14212
+    lat: 42.8888
+    lon: -78.8327
+    radius_km: 0.5
+    priority: 3
+    aliases: ["Central Terminal", "Buffalo Central Terminal", "Paderewski Dr", "Paderewski Drive"]
+    ambiguous: []
+
+  - id: cazenovia_park
+    name: Cazenovia Park
+    short: "Caz Park"
+    address: Cazenovia St, Buffalo, NY 14220
+    lat: 42.8478
+    lon: -78.8044
+    radius_km: 0.8
+    priority: 3
+    aliases: ["Cazenovia Park", "Caz Park", "Cazenovia Casino"]
+    ambiguous: ["Caz"]
+
+  - id: sahlen_field
+    name: Sahlen Field (Buffalo Bisons)
+    short: "Sahlen Field"
+    address: 1 James D. Griffin Plaza, Buffalo, NY 14203
+    lat: 42.8805
+    lon: -78.8740
+    radius_km: 0.4
+    priority: 2
+    aliases: ["Sahlen Field", "Sahlen's Field", "Sahlens Field", "Buffalo Bisons", "#Bisons", "Coca-Cola Field"]
+    ambiguous: ["Bisons", "the ballpark"]
+
+  - id: highmark_stadium
+    name: Highmark Stadium (Buffalo Bills) — new stadium, Orchard Park
+    short: "Highmark Stadium"
+    address: Abbott Rd, Orchard Park, NY 14127
+    lat: 42.7745
+    lon: -78.7880
+    radius_km: 1.2
+    priority: 1
+    aliases: ["Highmark Stadium", "new Bills stadium", "Bills stadium", "Bills Mafia", "#BillsMafia", "Buffalo Bills", "Abbott Road", "Abbott Rd"]
+    ambiguous: ["Bills game", "the stadium", "tailgate", "tailgating"]
+
+  - id: canalside
+    name: Canalside
+    short: "Canalside"
+    address: 44 Prime St, Buffalo, NY 14202
+    lat: 42.8775
+    lon: -78.8790
+    radius_km: 0.5
+    priority: 1
+    aliases: ["Canalside", "Canal Side", "Erie Canal Harbor", "Commercial Slip", "Ice at Canalside", "#Canalside"]
+    ambiguous: []
+
+  - id: keybank_center
+    name: KeyBank Center (Buffalo Sabres)
+    short: "KeyBank Ctr"
+    address: 1 Seymour H. Knox III Plaza, Buffalo, NY 14203
+    lat: 42.8750
+    lon: -78.8764
+    radius_km: 0.4
+    priority: 1
+    aliases: ["KeyBank Center", "Key Bank Center", "Key Bank Arena", "KeyBank Arena", "Buffalo Sabres", "#Sabres", "#LetsGoBuffalo", "First Niagara Center", "HSBC Arena"]
+    ambiguous: ["Sabres", "the Arena", "Perry St"]
+
+  - id: naval_park
+    name: Buffalo & Erie County Naval & Military Park
+    short: "Naval Park"
+    address: 1 Naval Park Cove, Buffalo, NY 14202
+    lat: 42.8777
+    lon: -78.8805
+    radius_km: 0.4
+    priority: 2
+    aliases: ["Buffalo Naval Park", "Naval Park", "Naval and Military Park", "USS The Sullivans", "USS Little Rock", "USS Croaker"]
+    ambiguous: ["naval museum", "naval ships"]
+
+  - id: explore_and_more
+    name: Explore & More Children's Museum
+    short: "Explore & More"
+    address: 130 Main St, Buffalo, NY 14202
+    lat: 42.8781
+    lon: -78.8772
+    radius_km: 0.3
+    priority: 2
+    aliases: ["Explore & More", "Explore and More", "Explore & More Children's Museum", "Ralph C. Wilson Jr. Children's Museum"]
+    ambiguous: ["children's museum"]
+
+  - id: convention_center
+    name: Buffalo Niagara Convention Center
+    short: "Convention Ctr"
+    address: 153 Franklin St, Buffalo, NY 14202
+    lat: 42.8867
+    lon: -78.8772
+    radius_km: 0.3
+    priority: 2
+    aliases: ["Buffalo Convention Center", "Buffalo Niagara Convention Center", "Convention Center Buffalo"]
+    ambiguous: ["convention center"]
+
+  - id: entertainment_district
+    name: Downtown Entertainment District
+    short: "Entertainment Dist."
+    address: Chippewa St / Theatre District, Buffalo, NY 14202
+    lat: 42.8925
+    lon: -78.8745
+    radius_km: 0.6
+    priority: 1
+    aliases: ["Chippewa Street", "Chippewa St", "Theatre District", "Theater District", "Entertainment District", "Shea's", "Sheas Buffalo"]
+    ambiguous: ["Chippewa", "downtown"]
+
+  - id: mlk_park
+    name: Martin Luther King Jr. Park
+    short: "MLK Park"
+    address: Fillmore Ave & Best St, Buffalo, NY 14211
+    lat: 42.9025
+    lon: -78.8390
+    radius_km: 0.6
+    priority: 3
+    aliases: ["MLK Park", "Martin Luther King Park", "Martin Luther King Jr. Park", "Humboldt Park"]
+    ambiguous: []
+
+  - id: outer_harbor
+    name: Buffalo Outer Harbor
+    short: "Outer Harbor"
+    address: Fuhrmann Blvd, Buffalo, NY 14203
+    lat: 42.8640
+    lon: -78.8730
+    radius_km: 1.5
+    priority: 1
+    aliases: ["Outer Harbor", "Outer Harbour", "Fuhrmann Blvd", "Fuhrmann Boulevard", "Buffalo Harbor State Park", "Gallagher Beach", "Wilkeson Pointe", "Seaway Pier", "Terminal B", "Marine Drive"]
+    ambiguous: ["waterfront", "boardwalk"]
+
+  - id: jcc_delaware
+    name: JCC of Greater Buffalo — Benderson Family Building (Delaware Ave)
+    short: "JCC Delaware"
+    address: 787 Delaware Ave, Buffalo, NY 14209
+    lat: 42.9036
+    lon: -78.8722
+    radius_km: 0.3
+    priority: 1
+    aliases: ["Jewish Community Center", "JCC Buffalo", "JCC of Greater Buffalo", "Benderson Family Building", "787 Delaware"]
+    ambiguous: ["JCC", "Jewish Center", "synagogue"]
+
+  - id: jcc_getzville
+    name: JCC of Greater Buffalo — Holland Family Building (Getzville)
+    short: "JCC Getzville"
+    address: 2640 N Forest Rd, Getzville, NY 14068
+    lat: 43.0236
+    lon: -78.7647
+    radius_km: 0.4
+    priority: 1
+    aliases: ["Holland Family Building", "JCC Getzville", "JCC Amherst", "2640 North Forest"]
+    ambiguous: ["JCC", "Jewish Center"]
+
+  - id: public_safety_campus
+    name: 45 Elm Street (Public Safety Campus)
+    short: "45 Elm St"
+    address: 45 Elm St, Buffalo, NY 14203
+    lat: 42.8849
+    lon: -78.8695
+    radius_km: 0.3
+    priority: 2
+    aliases: ["45 Elm Street", "45 Elm St", "Public Safety Campus"]
+    ambiguous: []
+
+  - id: niagara_square
+    name: Niagara Square
+    short: "Niagara Sq"
+    address: Niagara Square, Buffalo, NY 14202
+    lat: 42.8866
+    lon: -78.8786
+    radius_km: 0.3
+    priority: 1
+    aliases: ["Niagara Square", "McKinley Monument"]
+    ambiguous: []
+
+  - id: buffalo_police
+    name: Buffalo Police Department HQ
+    short: "BPD HQ"
+    address: 68 Court St, Buffalo, NY 14202
+    match_name: false   # the bare agency name appears in routine news; match HQ aliases only
+    lat: 42.8857
+    lon: -78.8770
+    radius_km: 0.3
+    priority: 1
+    aliases: ["Buffalo police headquarters", "Buffalo Police HQ", "BPD headquarters", "68 Court St", "68 Court Street"]
+    ambiguous: ["police headquarters", "police HQ"]   # plain "Buffalo Police" left out: it appears in almost every crime story
+
+  - id: city_hall
+    name: Buffalo City Hall
+    short: "City Hall"
+    address: 65 Niagara Square, Buffalo, NY 14202
+    lat: 42.8865
+    lon: -78.8797
+    radius_km: 0.3
+    priority: 1
+    aliases: ["Buffalo City Hall", "65 Niagara Square", "Buffalo Common Council"]
+    ambiguous: ["City Hall", "Common Council"]
+
+  - id: federal_courthouse
+    name: Robert H. Jackson U.S. Courthouse
+    short: "Fed Courthouse"
+    address: 2 Niagara Square, Buffalo, NY 14202
+    lat: 42.8876
+    lon: -78.8794
+    radius_km: 0.3
+    priority: 1
+    aliases: ["Federal Courthouse Buffalo", "Robert H. Jackson Courthouse", "Jackson Courthouse", "2 Niagara Square", "Michael J. Dillon Courthouse", "WDNY federal court"]
+    ambiguous: ["federal courthouse", "federal court"]
+
+  - id: rath_building
+    name: Rath Building (Erie County government)
+    short: "Rath Bldg"
+    address: 95 Franklin St, Buffalo, NY 14202
+    lat: 42.8858
+    lon: -78.8763
+    radius_km: 0.3
+    priority: 2
+    aliases: ["Rath Building", "Edward A. Rath County Office Building", "95 Franklin St"]
+    ambiguous: []
+
+  - id: holding_center
+    name: Erie County Holding Center
+    short: "Holding Ctr"
+    address: 40 Delaware Ave, Buffalo, NY 14202
+    lat: 42.8855
+    lon: -78.8790
+    radius_km: 0.3
+    priority: 2
+    aliases: ["Erie County Holding Center", "Holding Center", "40 Delaware Ave"]
+    ambiguous: []
+
+  - id: sheriffs_office
+    name: Erie County Sheriff's Office
+    short: "Sheriff HQ"
+    address: 10 Delaware Ave, Buffalo, NY 14202
+    match_name: false   # the bare agency name appears in routine news; match HQ aliases only
+    lat: 42.8848
+    lon: -78.8784
+    radius_km: 0.3
+    priority: 2
+    aliases: ["Erie County Sheriff's Office headquarters", "Sheriff's Office headquarters", "10 Delaware Ave", "10 Delaware Avenue"]
+    ambiguous: ["sheriff's headquarters"]   # plain "Erie County Sheriff" left out: too common in routine news
+
+  - id: board_of_elections
+    name: Erie County Board of Elections
+    short: "Board of Elections"
+    address: 134 W Eagle St, Buffalo, NY 14202
+    lat: 42.8850
+    lon: -78.8767
+    radius_km: 0.3
+    priority: 1
+    aliases: ["Erie County Board of Elections", "Board of Elections", "134 West Eagle", "134 W Eagle"]
+    ambiguous: ["polling site", "ballots", "election office"]
+
+  - id: riverworks
+    name: RiverWorks
+    short: "RiverWorks"
+    address: 359 Ganson St, Buffalo, NY 14203
+    lat: 42.8692
+    lon: -78.8655
+    radius_km: 0.4
+    priority: 2
+    aliases: ["RiverWorks", "Buffalo RiverWorks", "Ganson St", "Ganson Street"]
+    ambiguous: []
+
+  - id: intl_rail_bridge
+    name: International Railway Bridge (Black Rock — Fort Erie)
+    short: "Intl Rail Bridge"
+    address: Black Rock, Buffalo, NY 14207
+    lat: 42.9330
+    lon: -78.9060
+    radius_km: 0.8
+    priority: 1
+    aliases: ["International Railway Bridge", "International Rail Bridge", "Black Rock rail bridge", "Black Rock Canal", "CN rail bridge Fort Erie"]
+    ambiguous: ["rail bridge", "Fort Erie"]
+
+  - id: fire_hq
+    name: Buffalo Fire Department HQ
+    short: "Fire HQ"
+    address: 195 Court St, Buffalo, NY 14202   # verify
+    match_name: false   # the bare agency name appears in routine news; match HQ aliases only
+    lat: 42.8856
+    lon: -78.8735
+    radius_km: 0.3
+    priority: 2
+    aliases: ["Buffalo Fire HQ", "Buffalo Fire Headquarters", "Buffalo Fire Department headquarters", "195 Court St"]
+    ambiguous: ["fire headquarters", "BFD headquarters"]
