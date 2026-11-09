@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-11-09: reliability audit, wider coverage
+Found by checking 102 scans of history in the database, then fixed:
+- **GDELT never returned anything** (35 rate-limit errors, 33 empty runs in 68 scans): its search API now answers 429 even to the first request. It now reads GDELT's 15-minute event files instead (no rate limit, ~100 KB each), keeping threat-type events geocoded within 40 km of Buffalo. The search API stays available as `gdelt.mode: doc`.
+- **Every source reported the same time** (~53 s, the slowest source's). Each source now reports its own collection time.
+- **Dead feeds were invisible:** a feed that failed was only counted in a log line. Partly failed sources now carry a warning naming the failed feed (e.g. WGRZ timing out), shown in the scan output, source table and collection log.
+- **Bluesky crashed on its own timestamps** (nanosecond precision, which Python 3.10 rejects). A shared `parse_iso` now reads API timestamps for Bluesky, Mastodon, X and Ticketmaster.
+- **Alerts reached no one** (`ALERT_CHANNELS=console`): 3 Act now and 36 Alert items were printed to a log nobody reads. New `mac` channel: a Notification Center banner, no setup.
+
+Wider coverage:
+- **Bluesky works without a key** through the public AppView search. It had been "not set up" for every scan; the self-test now finds 169 items and 12 would-be hits over 72 h.
+- **Light hourly scans** between the 07:00/15:00 full scans (371 hours had been skipped): local feeds, GDELT, NWS, TFR, Mastodon, Bluesky and ADS-B. Alerts go out; no summary email.
+- **New local feeds:** The Buffalo News (local) and WBFO (NPR Buffalo).
+- 11 new offline tests (79 in total).
+
 ## 2026-10-26: collection log, new sidebar, scan emails
 - **Collection log in the database** (`collection_log` table) in the analyst template's 11 columns:
   - Date Collected, Analyst Initials, Collection Phase, Tool / Platform Used, Source Name, Source URL / Citation, Source Tier, Source Reliability, Raw Information, Analyst Notes, Preliminary Threat Level.

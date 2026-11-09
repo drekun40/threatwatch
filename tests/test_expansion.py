@@ -80,7 +80,7 @@ def test_gdelt(ctx, monkeypatch):
                                        "seendate": seen, "domain": "example.com"}]})
     monkeypatch.setattr(gdelt.requests, "get", fake_get)
     monkeypatch.setattr(gdelt.time, "sleep", lambda s: None)
-    posts = gdelt.GDELTCollector({"enabled": True}).collect(ctx)
+    posts = gdelt.GDELTCollector({"enabled": True, "mode": "doc"}).collect(ctx)
     assert len(posts) == 1 and posts[0].source == "gdelt" and posts[0].reliability == "C"
     assert all("sourcelang:english" in q for q in calls) and len(calls) >= 4
     hit = Matcher(load_facilities(), load_keywords()).match(posts[0])

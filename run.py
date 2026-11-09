@@ -96,19 +96,23 @@ def cmd_selftest(args):
 
 def cmd_scan(args):
     from threatwatch.pipeline import auto_reason, run_scan
+    light = False
     if args.auto:
         from threatwatch.store import Store
-        why = auto_reason(Store(), load_sources())
-        if not why:
+        from threatwatch.pipeline import light_enabled
+        sources = load_sources()
+        why = auto_reason(Store(), sources)
+        light = not why and light_enabled(sources)
+        if not why and not light:
             print(time.strftime("%Y-%m-%d %H:%M"), "auto: no event or open alert, skipping this hour")
             return
-        print(time.strftime("%Y-%m-%d %H:%M"), "auto:", why)
+        print(time.strftime("%Y-%m-%d %H:%M"), "auto:", why or "light hourly scan (fast sources only)")
         from threatwatch.pipeline import online
         if not online():
             print(time.strftime("%Y-%m-%d %H:%M"), "auto: no internet after 90 s (computer asleep or offline); "
                   "skipping instead of logging an empty scan")
             return
-    r = run_scan(send_alerts=not args.no_alerts)
+    r = run_scan(send_alerts=not args.no_alerts, light=bool(args.auto and light))
     t = r.tier_counts()
     print(f"Collected {r.collected} items, {r.new_posts} new, {len(r.hits)} hits "
           f"(ACT {t['ACT']}, ALERT {t['ALERT']}, WATCH {t['WATCH']}, LOG {t['LOG']}), "
@@ -122,6 +126,8 @@ def cmd_scan(args):
         print("  Excel log:", p)
     for k, v in r.not_configured.items():
         print(f"  – {k} not set up: {v}")
+    for k, v in r.warnings.items():
+        print(f"  ~ {k}: {v}")
     for k, v in r.errors.items():
         print(f"  ! {k}: {v}")
 

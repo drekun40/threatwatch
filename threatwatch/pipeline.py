@@ -31,6 +31,8 @@ class ScanResult:
     scan_id: int | None = None
     source_detail: dict = field(default_factory=dict)   # source -> {state, seconds, error}
     collection: list = field(default_factory=list)      # one row per collected item (see Store.log_collection)
+    warnings: dict[str, str] = field(default_factory=dict)   # source -> partial problem (source still ran)
+    kind: str = "full"                                   # "full" or "light" (hourly, fast sources only)
 
     def tier_counts(self) -> dict[str, int]:
         out = {"ACT": 0, "ALERT": 0, "WATCH": 0, "LOG": 0}
@@ -100,15 +102,19 @@ def process_posts(posts: list[Post], store: Store, matcher: Matcher, sources_cfg
     return new, hits
 
 
-def _record(store: Store, result: "ScanResult", name: str, got=None, exc=None, seconds=0.0) -> None:
+def _record(store: Store, result: "ScanResult", name: str, got=None, exc=None, seconds=0.0,
+            note: str = "") -> None:
+    """note: a partial problem in a source that still returned (e.g. one feed of eleven failed)."""
     if exc is None:
         n = len(got)
         if name in ("schedules", "events"):   # these store events instead of returning posts
             n = int(store.get_state(f"{name}_last_count", 0) or 0)
         latest = max((p.created_at for p in got), default=None)
         result.per_source[name] = len(got)
-        result.source_detail[name] = {"state": "ok" if n else "empty", "seconds": round(seconds, 1), "error": ""}
-        store.record_source(name, "ok" if n else "empty", n, latest.isoformat() if latest else None)
+        result.source_detail[name] = {"state": "ok" if n else "empty", "seconds": round(seconds, 1), "error": note[:300]}
+        store.record_source(name, "ok" if n else "empty", n, latest.isoformat() if latest else None, error=note)
+        if note:
+            result.warnings[name] = note[:300]
         log.info("%s: %d items in %.1fs", name, len(got), seconds)
     elif isinstance(exc, NotConfigured):
         result.not_configured[name] = str(exc)
@@ -120,6 +126,10 @@ def _record(store: Store, result: "ScanResult", name: str, got=None, exc=None, s
         result.source_detail[name] = {"state": "error", "seconds": round(seconds, 1), "error": str(exc)[:300]}
         store.record_source(name, "error", 0, error=str(exc))
         log.warning("%s failed: %s", name, exc)
+
+
+def _warnings(c) -> str:
+    return "; ".join(str(w) for w in (getattr(c, "warnings", None) or []))[:300]
 
 
 def collect_all(collectors, ctx: CollectContext, store: Store, result: "ScanResult",
@@ -140,7 +150,7 @@ def collect_all(collectors, ctx: CollectContext, store: Store, result: "ScanResu
         try:
             got = c.collect(ctx)
             posts += got
-            _record(store, result, c.name, got, seconds=time.monotonic() - t0)
+            _record(store, result, c.name, got, seconds=time.monotonic() - t0, note=_warnings(c))
         except Exception as e:
             _record(store, result, c.name, exc=e)
     if not rest:
@@ -150,26 +160,29 @@ def collect_all(collectors, ctx: CollectContext, store: Store, result: "ScanResu
     store.lock = locked._lock          # run_scan holds it while scoring, in case a timed-out source still writes
     pctx = replace(ctx, store=locked)
     pool = ThreadPoolExecutor(max_workers=max(1, workers), thread_name_prefix="collect")
-    started = {}
+    started, finished = {}, {}
 
     def run(c):
         started[c.name] = time.monotonic()
-        return c.collect(pctx)
+        try:
+            return c.collect(pctx)
+        finally:
+            finished[c.name] = time.monotonic()
 
     futs = {pool.submit(run, c): c for c in rest}
     done, pending = wait(futs, timeout=budget_s)
     done = sorted(done, key=lambda f: futs[f].name)
     for f in done:
         c = futs[f]
-        secs = time.monotonic() - started.get(c.name, time.monotonic())
+        secs = finished.get(c.name, time.monotonic()) - started.get(c.name, time.monotonic())
         try:
             got = f.result()
             posts += got
             with locked._lock:
-                _record(store, result, c.name, got, seconds=secs)
+                _record(store, result, c.name, got, seconds=secs, note=_warnings(c))
         except Exception as e:
             with locked._lock:
-                _record(store, result, c.name, exc=e)
+                _record(store, result, c.name, exc=e, seconds=secs)
     for f in pending:
         with locked._lock:
             _record(store, result, futs[f].name,
@@ -178,15 +191,39 @@ def collect_all(collectors, ctx: CollectContext, store: Store, result: "ScanResu
     return posts
 
 
-def run_scan(send_alerts: bool = True, store: Store | None = None) -> ScanResult:
+def light_sources_cfg(sources: dict) -> dict:
+    """The source config for a light scan: only the sources listed under scan.light.sources, and news
+    from the local outlet feeds only (no Google/Bing searches, which would be throttled if run hourly)."""
+    import copy
+    cfg = copy.deepcopy(sources)
+    keep = set(cfg.get("scan", {}).get("light", {}).get("sources", []))
+    for name, sc in cfg.get("sources", {}).items():
+        if name not in keep:
+            sc["enabled"] = False
+    news = cfg.get("sources", {}).get("news")
+    if news and news.get("enabled"):
+        news.update(google_news=False, bing_news=False, threat_sweeps=False, extra_queries=[])
+    return cfg
+
+
+def light_enabled(sources: dict) -> bool:
+    light = sources.get("scan", {}).get("light", {})
+    return bool(light.get("enabled") and light.get("sources"))
+
+
+def run_scan(send_alerts: bool = True, store: Store | None = None, light: bool = False) -> ScanResult:
+    """light=True: the hourly scan between full scans (see light_sources_cfg). It still sends alerts for
+    Act now / Alert items, but no scan summary email, so the inbox gets two summaries a day, not 24."""
     started = utcnow()
     facilities, keywords, sources = load_facilities(), load_keywords(), load_sources()
+    if light:
+        sources = light_sources_cfg(sources)
     store = store or Store()
     matcher = Matcher(facilities, keywords)
     lookback = float(sources.get("scan", {}).get("lookback_hours", 24))
     ctx = CollectContext(facilities, keywords, sources, store, window_start(lookback))
 
-    result = ScanResult()
+    result = ScanResult(kind="light" if light else "full")
     result.scan_id = store.begin_scan(started)
     all_posts = collect_all(get_collectors(sources), ctx, store, result,
                             budget_s=float(sources.get("scan", {}).get("max_seconds", 300)),
@@ -234,7 +271,8 @@ def _finish(result, all_posts, store, matcher, sources, started, send_alerts) ->
 
     store.log_scan(started, result.collected, result.new_posts, len(result.hits),
                    result.alerts_sent, result.errors,
-                   {"per_source": result.per_source, "not_configured": result.not_configured}, scan_id=result.scan_id)
+                   {"per_source": result.per_source, "not_configured": result.not_configured,
+                    "warnings": result.warnings, "kind": result.kind}, scan_id=result.scan_id)
     try:   # Excel log of Alert/Watch items, same format every scan
         important = [h for h in result.hits if h.tier in REVIEW_TIERS]
         ids = [r["id"] for r in store.conn.execute(
@@ -248,7 +286,9 @@ def _finish(result, all_posts, store, matcher, sources, started, send_alerts) ->
         result.export_paths.append(write_collection_excel(store))
     except Exception as e:
         result.errors["collection_excel"] = str(e)[:300]
-    if send_alerts:   # last, so it can report everything above (including Excel errors)
+    if send_alerts and result.kind == "light":
+        result.delivery["summary"] = {"ok": True, "sent": False, "message": "light hourly scan: no summary email"}
+    elif send_alerts:   # last, so it can report everything above (including Excel errors)
         from .alerts import send_scan_summary
         sent, msg = send_scan_summary(result, matcher)
         failed = msg.startswith("summary email failed")

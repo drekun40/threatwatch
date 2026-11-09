@@ -13,7 +13,7 @@ import requests
 from .. import http
 
 from ..config import env
-from ..models import Post
+from ..models import Post, parse_iso
 from . import CollectContext, NotConfigured
 
 URL = "https://api.x.com/2/tweets/search/recent"
@@ -75,7 +75,7 @@ class XCollector:
                 posts.append(Post(
                     source="x", source_name="X", native_id=t["id"],
                     url=f"https://x.com/{handle or 'i'}/status/{t['id']}", text=t.get("text", ""),
-                    created_at=datetime.fromisoformat(t["created_at"].replace("Z", "+00:00")),
+                    created_at=parse_iso(t["created_at"]),
                     author=handle, reliability="C" if u.get("verified") else "D",
                     is_local=key.startswith("geo:"), engagement=t.get("public_metrics", {})))
 

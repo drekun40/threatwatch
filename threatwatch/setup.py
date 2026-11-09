@@ -9,7 +9,7 @@ from .config import env, load_facilities, load_keywords, load_sources
 
 # source -> setup facts. fields: (ENV_NAME, label, secret)
 CONNECT = {
-    "bluesky": dict(title="Bluesky", minutes=2, adds="Public posts that name a site, plus threat-term searches.",
+    "bluesky": dict(title="Bluesky", minutes=2, adds="Works without a key (public search). A handle + app password raises the rate limit.",
                     url="https://bsky.app/settings/app-passwords",
                     steps="Sign in to Bluesky → Settings → Privacy and security → App passwords → Add. "
                           "Use your handle (name.bsky.social) and the app password, not your normal password.",

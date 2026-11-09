@@ -3,7 +3,7 @@
 Watches 27 Buffalo and Erie County sites across open sources and sensor feeds. Each item is scored, rated with the Admiralty system and placed on a live map. Alerts go to Teams or email, and a Word report is built each week.
 
 ```
-Google + Bing News · GDELT · 8 local outlet feeds                (what's published)
+Google + Bing News · GDELT events · 11 local outlet feeds        (what's published)
 Bluesky · Mastodon · Telegram · YouTube                          (what people post)
 NWS alerts · FAA flight restrictions                             (official notices)
 Open Data Buffalo police incidents · 511NY traffic events        (official records)
@@ -41,7 +41,7 @@ python run.py selftest      # connects to every source and reports what it found
 |---|---|---|---|
 | Google News + Bing News | Searches per site plus threat sweeps ("bomb threat" … Buffalo / Erie County); Bing links go straight to the publisher | none | — |
 | Local outlet feeds | WGRZ, WKBW, WIVB, Spectrum News, Investigative Post, Buffalo Rising | none | — |
-| GDELT | Global news index updated every 15 min: national, trade and international outlets | none | — |
+| GDELT | 15-minute event files: news articles machine-coded as threats, protests, assaults etc. and geocoded within 40 km of Buffalo. Low volume for Buffalo (a few articles a day), but no rate limit | none | — |
 | FAA TFRs | Temporary flight restrictions over the Buffalo area (VIP visits, security) | none | — |
 | Mastodon | Public posts with Buffalo hashtags | none | — |
 | NWS alerts | Weather, gale, visibility, lake effect | none | — |
@@ -52,7 +52,7 @@ python run.py selftest      # connects to every source and reports what it found
 | YouTube | Videos and livestreams geotagged near sites, plus keyword searches | `YOUTUBE_API_KEY` | Google Cloud console → enable YouTube Data API v3 → API key |
 | AIS | Vessels on the waterfront: aground, stationary at the rail bridge, speeding in the harbor | `AISSTREAM_API_KEY` | aisstream.io (sign in with GitHub) |
 | Telegram | Public channels you choose | `TELEGRAM_API_ID`, `TELEGRAM_API_HASH` | my.telegram.org → API development tools |
-| Bluesky | Public posts | `BLUESKY_HANDLE`, `BLUESKY_APP_PASSWORD` | Bluesky → Settings → App passwords |
+| Bluesky | Public posts that name a site, plus threat-term searches. Works without a key through Bluesky's public search | optional `BLUESKY_HANDLE`, `BLUESKY_APP_PASSWORD` (higher rate limit) | Bluesky → Settings → App passwords |
 | Reddit | Local subreddits | after approval | Reddit's Responsible Builder Policy |
 | X | Posts (pay-per-use) | `X_BEARER_TOKEN` | developer.x.com |
 
@@ -68,11 +68,11 @@ The account only reads. It never posts, and it never joins anything.
 
 A source that is enabled but has no key shows as "set up" in the sidebar and is skipped. It never breaks a scan.
 
-**Alerts:** set `ALERT_CHANNELS=email` (or `teams,email`) and fill in the SMTP or Teams fields. Check them with `python run.py test-alert`.
+**Alerts:** `ALERT_CHANNELS` takes any of `mac`, `email`, `teams`, `console`. `mac` shows a Notification Center banner on the Mac that runs the scans and needs no setup. For `email` or `teams`, fill in the SMTP or Teams fields. Check them with `python run.py test-alert`.
 
 Two kinds of message go out:
 - **Alert messages:** Act now and Alert items, sent once each through every channel as soon as a scan finds them.
-- **Scan summary email:** one email after every scan, including scans that find nothing. It has collected and new counts, items by level, counts per source, errors, sources not set up, and the top 10 Act/Alert/Watch items with links. It's sent when `email` is in `ALERT_CHANNELS`, the SMTP fields and `ALERT_EMAIL_TO` are filled in, and `SCAN_SUMMARY_EMAIL=1` (the default). Set `SCAN_SUMMARY_EMAIL=0` to stop it. Scans run with alerts turned off (`scan --no-alerts`, or the toggle in Admin) send neither kind. With the hourly schedule, expect a summary at 07:00 and 15:00, plus one per hour around events and after alerts.
+- **Scan summary email:** one email after every scan, including scans that find nothing. It has collected and new counts, items by level, counts per source, errors, sources not set up, and the top 10 Act/Alert/Watch items with links. It's sent when `email` is in `ALERT_CHANNELS`, the SMTP fields and `ALERT_EMAIL_TO` are filled in, and `SCAN_SUMMARY_EMAIL=1` (the default). Set `SCAN_SUMMARY_EMAIL=0` to stop it. Scans run with alerts turned off (`scan --no-alerts`, or the toggle in Admin) send neither kind. With the hourly schedule, expect a summary at 07:00 and 15:00, plus one per hour around events and after alerts. Light hourly scans send alerts but no summary.
 
 After a dashboard scan, a **Last scan** card shows counts by level, whether alert and summary delivery worked (or why they were skipped), source problems, and sources not set up.
 
@@ -117,11 +117,11 @@ Every change is kept in the review history.
 
 ## 4. Schedule
 
-The Mac installer schedules `run.py scan --auto` every hour. It does a full scan at 07:00 and 15:00, and in other hours it only scans when something is happening:
+The Mac installer schedules `run.py scan --auto` every hour. It does a full scan at 07:00 and 15:00, and also a full scan when something is happening:
 - from 6 h before until 3 h after a scheduled event at a site (games, concerts, your own events)
 - for 6 h after an open alert
 
-Quiet hours are skipped in about a second. All of this is set in the `scan:` block of `config/sources.yaml`. All sources run in parallel, so a full scan takes about a minute (a source that hangs is skipped after `max_seconds`).
+Every other hour it runs a **light scan** (`scan.light` in `config/sources.yaml`): the local outlet feeds, GDELT, NWS, FAA TFRs, Mastodon, Bluesky and ADS-B, without the Google/Bing searches (which would be throttled hourly) and without Open Data (which lags a day). A light scan takes under a minute, sends Act now/Alert items as usual, and sends no summary email. Set `scan.light.enabled: false` to skip quiet hours instead. All of this is set in the `scan:` block of `config/sources.yaml`. All sources run in parallel, so a full scan takes about a minute (a source that hangs is skipped after `max_seconds`).
 
 Other systems:
 
@@ -168,7 +168,7 @@ The rating is a source letter plus a credibility number:
 
 Located items (police incidents, traffic events, aircraft, vessels) match the nearest site whose geofence contains them. Text items match by site name or alias.
 
-**Collection reliability:** every HTTP request from a collector is retried up to 3 times with a short backoff (0.8 s, then 1.6 s) on connection errors, timeouts and HTTP 500/502/503/504. Rate limits (429) aren't retried; GDELT pauses itself for 45 minutes instead. A source that still fails is marked "not reachable" and the rest of the scan continues.
+**Collection reliability:** every HTTP request from a collector is retried up to 3 times with a short backoff (0.8 s, then 1.6 s) on connection errors, timeouts and HTTP 500/502/503/504. Rate limits (429) aren't retried. A source that still fails is marked "not reachable" and the rest of the scan continues. A source that works but loses part of its requests (one dead feed of eleven, say) is marked working with a **warning** naming what failed; warnings show in the scan output (`~` lines), the scan's source table and the collection log. Each source's time is its own collection time.
 
 ## 6. Limits to keep in mind
 

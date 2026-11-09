@@ -136,6 +136,11 @@ class NewsCollector:
             results = list(pool.map(self._fetch, by_url))
         failures = [(u, err) for u, _, err in results if err]
         self.stats = {"requests": len(results), "failed": len(failures)}
+        # named outlet feeds are reported one by one (a dead feed is a coverage gap); searches as a count
+        dead = [f'{by_url[u]["name"]} ({err[:60]})' for u, err in failures if by_url[u]["engine"] == "feed"]
+        searches = sum(by_url[u]["engine"] != "feed" for u, _ in failures)
+        self.warnings = ([f"feed failed: {', '.join(dead)}"] if dead else []) + \
+                        ([f"{searches} search request(s) failed"] if searches else [])
         if failures and len(failures) == len(results):
             raise RuntimeError(f"all {len(results)} news requests failed, e.g. {failures[0][1][:120]}")
         if failures:

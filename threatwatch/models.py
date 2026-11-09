@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
@@ -78,3 +79,15 @@ class Hit:
 
 def utcnow() -> datetime:
     return datetime.now(timezone.utc)
+
+
+_FRACTION = re.compile(r"\.(\d+)")
+
+
+def parse_iso(value: str) -> datetime:
+    """ISO 8601 from an API, as aware UTC. Python 3.10's fromisoformat rejects a trailing "Z" and more than
+    fractions that aren't 3 or 6 digits (Bluesky sends nanoseconds: 2026-11-09T01:02:57.899061308+00:00).
+    A value without a zone is taken as UTC."""
+    s = _FRACTION.sub(lambda m: "." + (m.group(1) + "000000")[:6], str(value).strip().replace("Z", "+00:00"))
+    when = datetime.fromisoformat(s)
+    return (when if when.tzinfo else when.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)

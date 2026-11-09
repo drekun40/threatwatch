@@ -1,7 +1,7 @@
 """Alert delivery. Notifiers are pluggable: add a class with send(subject, items) and register it.
 
 Configured from .env:
-  ALERT_CHANNELS=teams,email        (any of: teams, email, console)
+  ALERT_CHANNELS=mac,email          (any of: mac, teams, email, console; mac = Notification Center banner)
   TEAMS_WEBHOOK_URL=...             (Teams Workflows "When a Teams webhook request is received")
   SMTP_HOST / SMTP_PORT / SMTP_USER / SMTP_PASSWORD / ALERT_EMAIL_FROM / ALERT_EMAIL_TO
   SCAN_SUMMARY_EMAIL=1              (default 1: email a summary after every scan when "email" is a channel)
@@ -43,6 +43,29 @@ class ConsoleNotifier:
         print(f"\n=== {subject} ===")
         for i in items:
             print(f"[{i['score']}] {i['facility']} | {i['categories']} | {i['admiralty']} | {i['url']}")
+
+
+class MacNotifier:
+    """A macOS Notification Center banner per alert batch. No setup: works on the Mac that runs the scans.
+    The banner names the top item; the dashboard and Excel log have the rest."""
+
+    def __init__(self):
+        import sys
+        if sys.platform != "darwin":
+            raise RuntimeError("the mac channel only works on macOS")
+
+    @staticmethod
+    def _q(text: str) -> str:   # AppleScript string literal
+        return '"' + str(text).replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+    def send(self, subject: str, items: list[dict]) -> None:
+        import subprocess
+        top = items[0] if items else {}
+        more = f" (+{len(items) - 1} more)" if len(items) > 1 else ""
+        body = f"[{top.get('score', '')}] {top.get('facility', '')}: {top.get('categories', '')}{more}" if top else subject
+        script = (f"display notification {self._q(body[:220])} with title \"ThreatWatch\" "
+                  f"subtitle {self._q(subject[:120])} sound name \"Submarine\"")
+        subprocess.run(["osascript", "-e", script], check=True, capture_output=True, timeout=15)
 
 
 class TeamsNotifier:
@@ -117,7 +140,7 @@ class EmailNotifier:
             s.send_message(msg)
 
 
-NOTIFIERS = {"console": ConsoleNotifier, "teams": TeamsNotifier, "email": EmailNotifier}
+NOTIFIERS = {"console": ConsoleNotifier, "mac": MacNotifier, "teams": TeamsNotifier, "email": EmailNotifier}
 
 
 def get_notifiers() -> list:

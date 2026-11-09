@@ -9,7 +9,7 @@ import requests
 
 from .. import http
 
-from ..models import Post
+from ..models import Post, parse_iso
 from . import CollectContext
 from .news import UA
 
@@ -46,7 +46,7 @@ class MastodonCollector:
                         break
                     oldest = None
                     for s in items:
-                        when = datetime.fromisoformat(s["created_at"].replace("Z", "+00:00")).astimezone(timezone.utc)
+                        when = parse_iso(s["created_at"])
                         oldest = when
                         if when < ctx.since or s.get("uri") in seen:
                             continue

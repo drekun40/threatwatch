@@ -1,13 +1,24 @@
-"""GDELT DOC 2.0: a global index of online news, updated every 15 minutes. Free, no key.
+"""GDELT: a global index of online news, updated every 15 minutes. Free, no key.
 
 Catches outlets that Google/Bing News and the local feeds miss (trade press, national and
-international sites). Titles only. GDELT asks for at most one request every 5 seconds.
+international sites). Two modes (sources.yaml, gdelt.mode):
+
+- "events" (default): the raw 15-minute GDELT 2.0 event files. Each event is machine-coded from an
+  article (who did what to whom, CAMEO code) and geocoded. We keep threat-type events located within
+  `radius_km` of Buffalo and turn each article into one item. Plain file downloads: no rate limit.
+- "doc": the DOC 2.0 search API. It throttles by IP (one request per 5 s, and it often answers 429
+  even then), so it is kept only as a fallback.
 """
 from __future__ import annotations
 
+import csv
+import io
+import math
+import re
 import time
+import zipfile
 from datetime import datetime, timedelta, timezone
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 import requests
 
@@ -18,6 +29,43 @@ from . import CollectContext
 from .news import ESTABLISHED, UA, chunks, title_key
 
 API = "https://api.gdeltproject.org/api/v2/doc/doc"
+FILES = "https://data.gdeltproject.org/gdeltv2"
+BUFFALO = (42.8864, -78.8784)
+# CAMEO root codes worth a security analyst's attention, and how each reads in an item
+ROOTS = {"13": "threaten", "14": "protest", "15": "show of force", "16": "reduce relations",
+         "17": "coerce", "18": "assault", "19": "fight", "20": "mass violence"}
+# GDELT 2.0 event file columns (0-based)
+C_ACTOR1, C_ACTOR2, C_ROOT, C_GEO_NAME, C_GEO_ADM1 = 6, 16, 28, 52, 54
+C_LAT, C_LON, C_ADDED, C_URL = 56, 57, 59, 60
+
+
+def km_between(a: tuple[float, float], b: tuple[float, float]) -> float:
+    la1, lo1, la2, lo2 = map(math.radians, (*a, *b))
+    h = math.sin((la2 - la1) / 2) ** 2 + math.cos(la1) * math.cos(la2) * math.sin((lo2 - lo1) / 2) ** 2
+    return 6371 * 2 * math.asin(math.sqrt(h))
+
+
+def headline_from_url(url: str) -> str:
+    """Most news URLs end in a slug of the headline: /2026/11/09/man-charged-in-elmwood-shooting/."""
+    parts = [p for p in urlparse(url).path.split("/") if p]
+    for seg in reversed(parts):
+        seg = re.sub(r"\.(s?html?|php|aspx?)$", "", unquote(seg), flags=re.I)
+        words = [w for w in re.split(r"[-_+]+", seg) if w and not re.fullmatch(r"[0-9a-f]{6,}|\d+|amp|index", w, re.I)]
+        if len(words) >= 3:
+            return " ".join(words).capitalize()
+    return ""
+
+
+def file_stamps(start: datetime, end: datetime) -> list[str]:
+    """15-minute GDELT file stamps (YYYYMMDDHHMMSS) after `start` up to and including `end`."""
+    t = start.replace(second=0, microsecond=0)
+    t -= timedelta(minutes=t.minute % 15)
+    out = []
+    while t < end:
+        t += timedelta(minutes=15)
+        if t <= end:
+            out.append(t.strftime("%Y%m%d%H%M%S"))
+    return out
 
 
 class GDELTCollector:
@@ -36,6 +84,91 @@ class GDELTCollector:
         return out + list(self.cfg.get("extra_queries", []))
 
     def collect(self, ctx: CollectContext) -> list[Post]:
+        if self.cfg.get("mode", "events") == "doc":
+            return self.collect_doc(ctx)
+        return self.collect_events(ctx)
+
+    # ---- events mode: raw 15-minute files -------------------------------------------------------
+    def latest_stamp(self) -> datetime:
+        r = http.get(f"{FILES}/lastupdate.txt", headers={"User-Agent": UA}, timeout=20)
+        r.raise_for_status()
+        m = re.search(r"/(\d{14})\.export\.CSV\.zip", r.text)
+        if not m:
+            raise RuntimeError(f"GDELT: unexpected lastupdate.txt ({r.text[:80]!r})")
+        return datetime.strptime(m.group(1), "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+
+    def read_file(self, stamp: str) -> list[list[str]]:
+        r = http.get(f"{FILES}/{stamp}.export.CSV.zip", headers={"User-Agent": UA}, timeout=40, tries=2)
+        if r.status_code == 404:       # GDELT occasionally skips a 15-minute slot
+            return []
+        r.raise_for_status()
+        with zipfile.ZipFile(io.BytesIO(r.content)) as z:
+            raw = z.read(z.namelist()[0]).decode("utf-8", "replace")
+        return list(csv.reader(io.StringIO(raw), delimiter="\t"))
+
+    def keep(self, row: list[str]) -> bool:
+        if len(row) <= C_URL or row[C_ROOT] not in self.roots:
+            return False
+        if row[C_GEO_ADM1] != "USNY":
+            return False
+        try:
+            here = (float(row[C_LAT]), float(row[C_LON]))
+        except ValueError:
+            return False
+        return km_between(here, self.center) <= self.radius_km
+
+    def collect_events(self, ctx: CollectContext) -> list[Post]:
+        self.center = tuple(self.cfg.get("center", BUFFALO))
+        self.radius_km = float(self.cfg.get("radius_km", 40))
+        self.roots = {str(c) for c in self.cfg.get("root_codes", ROOTS)}
+        latest = self.latest_stamp()
+        done = ctx.store.get_state("gdelt_last_file")
+        start = max(ctx.since, latest - timedelta(minutes=15 * int(self.cfg.get("max_files", 16))))
+        if done:
+            start = max(start, datetime.strptime(done, "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc))
+        stamps = file_stamps(start, latest)
+        by_url: dict[str, dict] = {}
+        self.warnings, read = [], 0
+        for stamp in stamps:
+            try:
+                rows = self.read_file(stamp)
+            except Exception as e:
+                self.warnings.append(f"file {stamp[8:12]} UTC: {str(e)[:60]}")
+                continue
+            read += 1
+            for row in rows:
+                if not self.keep(row):
+                    continue
+                url = row[C_URL]
+                item = by_url.setdefault(url, {"kinds": [], "place": row[C_GEO_NAME], "actors": set(),
+                                                "added": row[C_ADDED]})
+                kind = ROOTS.get(row[C_ROOT], row[C_ROOT])
+                if kind not in item["kinds"]:
+                    item["kinds"].append(kind)
+                item["actors"].update(a.title() for a in (row[C_ACTOR1], row[C_ACTOR2]) if a)
+        if stamps and not read:
+            raise RuntimeError(f"GDELT: none of {len(stamps)} event files could be read ({self.warnings[0]})")
+        if stamps:
+            ctx.store.set_state("gdelt_last_file", stamps[-1])
+        posts = []
+        for url, it in by_url.items():
+            try:
+                when = datetime.strptime(it["added"], "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+            except ValueError:
+                when = datetime.now(timezone.utc)
+            domain = urlparse(url).netloc.replace("www.", "")
+            title = headline_from_url(url)
+            who = f" involving {', '.join(sorted(it['actors'])[:3])}" if it["actors"] else ""
+            text = (f"{title + '. ' if title else ''}News report coded by GDELT as {' / '.join(it['kinds'])}"
+                    f"{who}, located in {it['place']}.")
+            posts.append(Post(
+                source="gdelt", source_name=domain, native_id=url, url=url, text=text,
+                created_at=max(when, ctx.since), reliability="B" if ESTABLISHED.search(domain) else "C",
+                engagement={"via": "GDELT 2.0 event files", "cameo": it["kinds"]}))
+        return posts
+
+    # ---- doc mode: DOC 2.0 search API (fallback) ------------------------------------------------
+    def collect_doc(self, ctx: CollectContext) -> list[Post]:
         # GDELT throttles by IP. After a 429 we wait before trying again instead of hammering it.
         nxt = ctx.store.get_state("gdelt_next_ok")
         if nxt and datetime.fromisoformat(nxt) > datetime.now(timezone.utc):

@@ -11,7 +11,7 @@ from .. import http
 
 from ..config import env
 from ..geo import nearest_facility
-from ..models import Post, utcnow
+from ..models import Post, utcnow, parse_iso
 from . import CollectContext, NotConfigured
 
 URL = "https://app.ticketmaster.com/discovery/v2/events.json"
@@ -27,7 +27,7 @@ def parse_event(ev: dict, facilities) -> dict | None:
         return None
     start = (ev.get("dates") or {}).get("start") or {}
     if start.get("dateTime"):
-        when = datetime.fromisoformat(start["dateTime"].replace("Z", "+00:00"))
+        when = parse_iso(start["dateTime"])
     elif start.get("localDate"):
         when = datetime.fromisoformat(start["localDate"] + "T19:00:00-04:00").astimezone(timezone.utc)
     else:

@@ -10,6 +10,9 @@ scan:
   event_after_hours: 3        # …until 3 h after it starts
   alert_followup_hours: 6     # …and for 6 h after an open alert
   max_seconds: 300            # a source still running after this is skipped for this scan (reported as timed out)
+  light:                      # every other hour (scan --auto): a quick scan of fast, free sources
+    enabled: true             # alerts still go out; no summary email (that stays with the full scans)
+    sources: [news, gdelt, nws, tfr, mastodon, bluesky, adsb]   # news = local outlet feeds only, no searches
 
 tiers:                        # score thresholds (see threatwatch/scoring.py, tier_for)
   act: 85                     # Act now: score >= act at a monitored site AND (corroborated OR source in act_reliability)
@@ -57,11 +60,22 @@ sources:
       - name: FBI Buffalo
         url: https://www.fbi.gov/feeds/buffalo-news/rss.xml
         reliability: A
+      - name: The Buffalo News (local)
+        url: https://buffalonews.com/search/?f=rss&t=article&c=news/local&l=50&s=start_time&sd=desc
+        reliability: B
+      - name: WBFO (NPR Buffalo)
+        url: https://www.wbfo.org/local-news.rss
+        reliability: B
 
-  gdelt:                      # GDELT global news index (updates every 15 min). Free, no key; ~1 query per 5 s.
+  gdelt:                      # GDELT global news index (updates every 15 min). Free, no key.
     enabled: true
+    mode: events              # events: 15-minute event files, geocoded, no rate limit | doc: search API (throttled)
+    radius_km: 40             # events located within this distance of downtown Buffalo
+    max_files: 16             # at most 4 h of files per scan (each file is ~100 KB)
+    root_codes: ["13", "14", "15", "17", "18", "19", "20"]   # CAMEO: threaten, protest, force, coerce, assault, fight, mass violence
+    # doc mode only:
     max_records: 75
-    min_interval_hours: 3     # GDELT throttles hard; once every 3 h is plenty for a 15-minute index
+    min_interval_hours: 3     # the search API throttles hard; once every 3 h at most
     extra_queries: []
 
   tfr:                        # FAA temporary flight restrictions over the Buffalo area (VIP/security). Free, no key.
@@ -77,7 +91,7 @@ sources:
     enabled: true
     zones: ["NYC029", "NYZ010", "NYZ019", "LEZ020"]   # Erie County, northern/southern Erie, Buffalo harbor marine zone
 
-  bluesky:                    # Public posts. Free; needs a Bluesky handle + app password in .env.
+  bluesky:                    # Public posts. Free, no key (a handle + app password in .env raises the rate limit).
     enabled: true
     per_query_limit: 50
 
