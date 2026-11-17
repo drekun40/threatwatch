@@ -10,3 +10,7 @@ __pycache__/
 .DS_Store
 .pytest_cache/
 .streamlit/secrets.toml
+
+# editor/agent skill links that point into the local .venv
+.agents/
+.claude/
