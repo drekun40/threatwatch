@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-17 (later): Mercyhurst design
+- **Colours:** Mercyhurst blue `#093C71` and green `#0F594E` (from mercyhurst.edu), lime `#ADCE65` as the highlight. Primary buttons, links, selection and the Watch level are Mercyhurst blue; live/healthy states are Mercyhurst green; the hero tile, brand mark and avatar use a blue-to-green gradient. Threat levels keep their meaning: Act now red, Alert orange, Watch blue, Logged grey (white text on each at 4.5:1 or better).
+- **Apple-style layout:** the system font (SF Pro) instead of a web font, grouped grey canvas with white cards and soft shadows, a translucent sidebar, tabs and segmented controls as Apple segmented controls (white thumb on a grey track; grey thumb in dark mode), filled and tinted rounded buttons, large titles, inset-grouped lists, an Apple Calendar-style date tile, and CARTO's light basemap.
+- **Dark mode** uses Apple's dark system greys with a lighter Mercyhurst blue for text and tints; filled buttons and the hero stay in the deep brand colours.
+- **Reports, Excel and email match:** Word headings in Mercyhurst blue/green and table headers in blue; Excel header rows blue (alerts log) and green (collection log), Watch rows tinted blue; the summary email uses the dashboard's level colours.
+
 ## 2026-11-17: collect more from what's already published
 - **Nearby streets place stories at sites.** 64% of hits were "Buffalo area" with no site. Each site now has a `nearby:` list (streets near only that site, plus intersections within 175 m, each owned by the nearest site) generated from US Census TIGER roads by `tools/build_gazetteer.py`. Case-sensitive, Buffalo context required, −5 in the score. Common street names (Main, North, Church…) only count inside an intersection after a Batavia "North Street" story was placed at the JCC.
 - **Full article text** for up to 40 promising new items per scan (`scan.article_text`), stored in a new `posts.body` column and read by the matcher and rescoring. robots.txt honoured; Google News links and buffalonews.com (429) skipped. Evidence only in the article text is capped at Watch (regression: a former Bills player's arrest reached Alert at Highmark Stadium).

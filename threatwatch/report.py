@@ -27,7 +27,8 @@ from . import intel
 from .store import INACTIVE, STATUS_LABEL, Store
 
 LOCAL = ZoneInfo("America/New_York")
-TIER_COLOR = {"ACT": "B42318", "ALERT": "F2622E", "WATCH": "2B2B2B", "LOG": "8A8A8A"}
+TIER_COLOR = {"ACT": "B42318", "ALERT": "C2570C", "WATCH": "093C71", "LOG": "8A8A8A"}
+MH_BLUE, MH_GREEN = "093C71", "0F594E"   # Mercyhurst blue and green (mercyhurst.edu)
 
 
 def _shade(cell, hex_color: str) -> None:
@@ -54,7 +55,7 @@ def _table(doc, headers: list[str], rows: list[list[str]], widths=None):
         run.bold = True
         run.font.size = Pt(9)
         run.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
-        _shade(c, "1F3A5F")
+        _shade(c, MH_BLUE)
     for row in rows:
         cells = t.add_row().cells
         for i, v in enumerate(row):
@@ -82,6 +83,7 @@ def build_weekly_report(days: int = 7, end: datetime | None = None, store: Store
     st = doc.styles["Normal"]
     st.font.name = "Calibri"
     st.font.size = Pt(10.5)
+    _brand(doc)
 
     h = doc.add_heading("ThreatWatch — Weekly Facility Threat Report", level=0)
     h.alignment = WD_ALIGN_PARAGRAPH.LEFT
@@ -205,11 +207,21 @@ TITLES = {"executive": "Executive Briefing", "analyst": "Analyst Report", "facil
           "selected": "Selected Incidents Report"}
 
 
+def _brand(doc) -> None:
+    """Headings in Mercyhurst blue (title, level 1) and green (level 2)."""
+    for name, color in (("Title", MH_BLUE), ("Heading 1", MH_BLUE), ("Heading 2", MH_GREEN)):
+        try:
+            doc.styles[name].font.color.rgb = RGBColor.from_string(color)
+        except KeyError:
+            pass
+
+
 def _doc():
     doc = Document()
     st = doc.styles["Normal"]
     st.font.name = "Calibri"
     st.font.size = Pt(10.5)
+    _brand(doc)
     return doc
 
 

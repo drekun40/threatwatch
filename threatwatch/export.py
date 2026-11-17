@@ -30,9 +30,9 @@ COLUMNS = [  # (header, width)
     ("Source type", 11), ("Summary", 70), ("Link", 12), ("Corroborated by", 10), ("Event nearby", 30),
     ("Status", 11), ("Analyst note", 30), ("Item ID", 8),
 ]
-HEADER_FILL = PatternFill("solid", fgColor="1D1D1F")
+HEADER_FILL = PatternFill("solid", fgColor="093C71")   # Mercyhurst blue
 LEVEL_FILL = {"ACT": PatternFill("solid", fgColor="F6D3D0"), "ALERT": PatternFill("solid", fgColor="FDE2D7"),
-              "WATCH": PatternFill("solid", fgColor="E6E6E6")}
+              "WATCH": PatternFill("solid", fgColor="E5EDF6")}
 LEVEL_WORD = {"ACT": "Act now", "ALERT": "Alert", "WATCH": "Watch"}
 WORD_LEVEL = {v: k for k, v in LEVEL_WORD.items()}
 
@@ -171,7 +171,7 @@ def write_collection_excel(store, days: int = 30) -> str:
         if row[lvl_col - 1] in LEVEL_FILL_TEMPLATE:
             ws.cell(row=n, column=lvl_col).fill = LEVEL_FILL_TEMPLATE[row[lvl_col - 1]]
     for i in range(len(TEMPLATE_COLUMNS) + 1, len(cols) + 1):   # extras after the template, in gray
-        ws.cell(row=1, column=i).fill = PatternFill("solid", fgColor="8A8A8A")
+        ws.cell(row=1, column=i).fill = PatternFill("solid", fgColor="0F594E")   # Mercyhurst green
     ws.auto_filter.ref = f"A1:{get_column_letter(len(cols))}{max(ws.max_row, 2)}"
 
     ws2 = _sheet(wb, "Sources per scan", SOURCE_COLUMNS)

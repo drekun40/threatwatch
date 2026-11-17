@@ -228,7 +228,7 @@ def build_scan_summary(result, matcher: Matcher, max_items: int = 10) -> tuple[s
               f"    {(h.post.text or '')[:220]}", f"    {h.post.url or 'no link'}"]
     t += ["", "Scores rank items for review; they are not probabilities. Open the dashboard to review."]
 
-    color = {"ACT": "#A2001D", "ALERT": "#FF3B30", "WATCH": "#FF9500"}
+    color = {"ACT": "#B42318", "ALERT": "#C2570C", "WATCH": "#093C71"}   # same as the dashboard
     rows = "".join(
         f'<tr><td style="padding:8px 10px;border-top:1px solid #eee"><span style="color:{color[h.tier]};font-weight:600">'
         f'{TIER_WORD[h.tier]}</span><br><span style="color:#6e6e73">{h.score} · {escape(h.admiralty)}</span></td>'

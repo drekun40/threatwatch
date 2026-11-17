@@ -27,31 +27,35 @@ st.set_page_config(page_title="ThreatWatch", page_icon="🛡️", layout="wide",
 ET = ZoneInfo("America/New_York")
 
 # ------------------------------------------------------------------ appearance (light / dark)
-# Card-dashboard palette (gray canvas, white cards, black primary, orange accent), light and dark. The choice is saved in data/ui.json and also applied
+# Mercyhurst blue/green on an Apple-style grouped layout, light and dark. The choice is saved in data/ui.json and also applied
 # to Streamlit's own theme, so native widgets (tables, dropdowns, dialogs) switch with the custom styling.
 PALETTES = {
-    # Warm-neutral card dashboard: gray canvas, white cards, black primary, orange accent.
-    "light": dict(LABEL="#141414", SECONDARY="#737373", SEPARATOR="#EBEBEB", CANVAS="#F1F1F1", SURFACE="#FFFFFF",
-                  FILL="#F4F4F4", SELECTED="#141414", TRACK="#F0F0F0", HAIR="rgba(0,0,0,.05)", SHADOW="rgba(0,0,0,.06)",
-                  SIDEBAR="#FFFFFF", GLASS="rgba(255,255,255,.90)", MAP_BG="#E9EDF0",
+    # Mercyhurst blue (#093C71) and green (#0F594E) on Apple's grouped-background system: grey canvas,
+    # white cards, system font. Threat levels keep their meaning: Act now red, Alert orange, Watch
+    # Mercyhurst blue, Logged grey. Every level colour carries white text at 4.5:1 or better.
+    "light": dict(LABEL="#1D1D1F", SECONDARY="#6E6E73", SEPARATOR="#E5E5EA", CANVAS="#F2F2F7", SURFACE="#FFFFFF",
+                  FILL="#F2F2F7", SELECTED="#093C71", TRACK="#E9E9EE", HAIR="rgba(0,0,0,.04)", SHADOW="rgba(9,30,66,.08)",
+                  SIDEBAR="rgba(246,246,249,.82)", GLASS="rgba(255,255,255,.82)", MAP_BG="#E8EDF2",
                   DOT_RING="rgba(255,255,255,.55)", TOOLTIP_BG="rgba(255,255,255,.97)",
-                  LIVE_BG="#E7F6EC", LIVE_FG="#15803D", DEMO_BG="#FFF1E8", DEMO_FG="#C2410C", DEMO_TEXT="#9A3412",
-                  INK="#141414", ON_INK="#FFFFFF", ACCENT="#F2622E", ACCENT_2="#FF8A5B", ACCENT_SOFT="#FDEDE6",
-                  UP_BG="#FDECEC", UP_FG="#D92D20", DOWN_BG="#E7F6EC", DOWN_FG="#15803D",
-                  RED="#E5484D", ORANGE="#F2622E", BLUE="#2563EB", GRAY="#A3A3A3", GREEN="#16A34A",
-                  PURPLE="#9B5DE5", CYAN="#0EA5E9", INDIGO="#4F46E5", YELLOW="#EAB308", ACT_RED="#B42318",
-                  WATCH="#2B2B2B", LOG_GRAY="#B5B5B5", CHART_LOG="#D9D9D9"),
-    "dark": dict(LABEL="#F4F4F5", SECONDARY="#A1A1AA", SEPARATOR="#2A2A2E", CANVAS="#0C0C0E", SURFACE="#18181B",
-                 FILL="#232327", SELECTED="#F4F4F5", TRACK="#26262A", HAIR="rgba(255,255,255,.06)", SHADOW="rgba(0,0,0,.45)",
-                 SIDEBAR="#141416", GLASS="rgba(24,24,27,.92)", MAP_BG="#1B1F23",
-                 DOT_RING="rgba(0,0,0,.35)", TOOLTIP_BG="rgba(35,35,39,.97)",
-                 LIVE_BG="rgba(34,197,94,.14)", LIVE_FG="#4ADE80", DEMO_BG="rgba(242,98,46,.16)", DEMO_FG="#FF8A5B",
-                 DEMO_TEXT="#FFB693",
-                 INK="#F4F4F5", ON_INK="#141414", ACCENT="#F2622E", ACCENT_2="#FF8A5B", ACCENT_SOFT="rgba(242,98,46,.16)",
-                 UP_BG="rgba(229,72,77,.16)", UP_FG="#FF6B6F", DOWN_BG="rgba(34,197,94,.14)", DOWN_FG="#4ADE80",
-                 RED="#FF6B6F", ORANGE="#FF7A45", BLUE="#60A5FA", GRAY="#52525B", GREEN="#4ADE80",
-                 PURPLE="#C084FC", CYAN="#38BDF8", INDIGO="#818CF8", YELLOW="#FACC15", ACT_RED="#E0312B",
-                 WATCH="#D4D4D8", LOG_GRAY="#71717A", CHART_LOG="#3F3F46"),
+                  LIVE_BG="#E3F1EC", LIVE_FG="#0F594E", DEMO_BG="#FDF1DF", DEMO_FG="#9A5B00", DEMO_TEXT="#7A4600",
+                  INK="#093C71", ON_INK="#FFFFFF", ACCENT="#093C71", ACCENT_2="#1E5C9E", ACCENT_SOFT="#E5EDF6",
+                  GREEN_BRAND="#0F594E", LIME="#ADCE65", HERO_GLOW="rgba(9,60,113,.28)",
+                  UP_BG="#FCE8E8", UP_FG="#B42318", DOWN_BG="#E3F1EC", DOWN_FG="#0F594E",
+                  RED="#D92D20", ORANGE="#C2570C", BLUE="#093C71", GRAY="#8E8E93", GREEN="#0F594E",
+                  PURPLE="#6B4FA0", CYAN="#0B7FA6", INDIGO="#3A4FB0", YELLOW="#D9A400", ACT_RED="#B42318",
+                  ALERT_C="#C2570C", WATCH="#093C71", LOG_GRAY="#A1A1A6", CHART_LOG="#D1D1D6", THUMB="#FFFFFF"),
+    "dark": dict(LABEL="#F5F5F7", SECONDARY="#98989D", SEPARATOR="#38383A", CANVAS="#000000", SURFACE="#1C1C1E",
+                 FILL="#2C2C2E", SELECTED="#7FB2EA", TRACK="#2C2C2E", HAIR="rgba(255,255,255,.06)", SHADOW="rgba(0,0,0,.5)",
+                 SIDEBAR="rgba(28,28,30,.78)", GLASS="rgba(28,28,30,.82)", MAP_BG="#151A20",
+                 DOT_RING="rgba(0,0,0,.35)", TOOLTIP_BG="rgba(44,44,46,.97)",
+                 LIVE_BG="rgba(63,168,142,.18)", LIVE_FG="#6FD1B5", DEMO_BG="rgba(249,155,37,.16)", DEMO_FG="#FFB65C",
+                 DEMO_TEXT="#FFCF94",
+                 INK="#7FB2EA", ON_INK="#06203E", ACCENT="#7FB2EA", ACCENT_2="#A9CCF2", ACCENT_SOFT="rgba(127,178,234,.16)",
+                 GREEN_BRAND="#3FA88E", LIME="#ADCE65", HERO_GLOW="rgba(0,0,0,.5)",
+                 UP_BG="rgba(255,105,97,.16)", UP_FG="#FF6961", DOWN_BG="rgba(63,168,142,.18)", DOWN_FG="#6FD1B5",
+                 RED="#FF6961", ORANGE="#FF9F43", BLUE="#7FB2EA", GRAY="#636366", GREEN="#6FD1B5",
+                 PURPLE="#B49BE8", CYAN="#5AC8FA", INDIGO="#8E9BF0", YELLOW="#FFD60A", ACT_RED="#E5484D",
+                 ALERT_C="#D9731A", WATCH="#3D78BF", LOG_GRAY="#636366", CHART_LOG="#3A3A3C", THUMB="#636366"),
 }
 UI_FILE = DATA_DIR / "ui.json"
 
@@ -102,7 +106,7 @@ RED, ORANGE, BLUE, GRAY, GREEN = P["RED"], P["ORANGE"], P["BLUE"], P["GRAY"], P[
 PURPLE, CYAN, INDIGO, YELLOW = P["PURPLE"], P["CYAN"], P["INDIGO"], P["YELLOW"]
 ACT_RED = P["ACT_RED"]     # deeper than system red: Act now outranks Alert
 ACCENT, INK = P["ACCENT"], P["INK"]
-STATUS = {"ACT": ACT_RED, "ALERT": ACCENT, "WATCH": P["WATCH"], "LOG": P["LOG_GRAY"], "NONE": SECONDARY}
+STATUS = {"ACT": ACT_RED, "ALERT": P["ALERT_C"], "WATCH": P["WATCH"], "LOG": P["LOG_GRAY"], "NONE": SECONDARY}
 STATUS_WORD = {**TIER_WORD, "NONE": "Quiet"}
 
 
@@ -110,257 +114,279 @@ def rgb(hex_: str, a: int = 255) -> list[int]:
     return [int(hex_[i:i + 2], 16) for i in (1, 3, 5)] + [a]
 
 
-FONT = '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", sans-serif'
+FONT = '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Inter", sans-serif'
+BRAND_GRAD = "linear-gradient(145deg, #1E5C9E 0%, #093C71 48%, #0F594E 100%)"   # Mercyhurst blue to green, both themes
 
 CSS = f"""
 <style>
-  @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
   html, body, .stApp, .stApp * :not(.material-symbols-rounded):not([data-testid="stIconMaterial"]) {{
-      font-family:{FONT}; }}
+      font-family:{FONT}; -webkit-font-smoothing:antialiased; letter-spacing:-.003em; }}
   .stApp {{ background:{CANVAS}; color:{LABEL}; }}
-  .block-container {{ padding-top:1.4rem; padding-bottom:3rem; max-width:1520px; }}
+  .block-container {{ padding-top:1.2rem; padding-bottom:3rem; max-width:1480px; }}
   header[data-testid="stHeader"] {{ background:transparent; }}
   .num {{ font-variant-numeric:tabular-nums; }}
 
-  /* sidebar: a white panel */
-  [data-testid="stSidebar"] {{ background:{P["SIDEBAR"]}; border-right:1px solid {SEPARATOR}; }}
-  [data-testid="stSidebar"] h3 {{ font-size:12px; font-weight:600; color:{SECONDARY}; margin:16px 0 4px;
-      text-transform:uppercase; letter-spacing:.06em; }}
-  .brand {{ display:flex; align-items:center; gap:10px; font-size:18px; font-weight:800; letter-spacing:-.3px; margin-bottom:6px; }}
+  /* sidebar: macOS-style translucent source list */
+  [data-testid="stSidebar"] {{ background:{P["SIDEBAR"]}; backdrop-filter:saturate(180%) blur(30px);
+      -webkit-backdrop-filter:saturate(180%) blur(30px); border-right:1px solid {SEPARATOR}; }}
+  [data-testid="stSidebar"] h3 {{ font-size:11px; font-weight:600; color:{SECONDARY}; margin:16px 0 4px;
+      text-transform:uppercase; letter-spacing:.04em; }}
+  .brand {{ display:flex; align-items:center; gap:10px; font-size:17px; font-weight:700; letter-spacing:-.4px; margin-bottom:8px; }}
   .brand-sub {{ font-size:11px; font-weight:500; color:{SECONDARY}; letter-spacing:0; margin-top:-1px; }}
-  [class*="st-key-sb_"] {{ background:{P["FILL"]}; border-radius:18px; padding:12px 12px 10px; gap:.35rem; }}
-  [class*="st-key-sb_"] [data-testid="stWidgetLabel"] p {{ font-size:10.5px; font-weight:700; color:{SECONDARY};
-      letter-spacing:.05em; text-transform:uppercase; }}
-  .sb-label {{ font-size:10.5px; font-weight:700; color:{SECONDARY}; letter-spacing:.05em; text-transform:uppercase;
-      margin:4px 2px 0; }}
+  .brand i {{ width:32px; height:32px; border-radius:9px; background:{BRAND_GRAD}; display:inline-flex;
+      align-items:center; justify-content:center; color:{P["LIME"]}; font-style:normal; font-size:16px;
+      box-shadow:0 2px 6px {P["HERO_GLOW"]}, inset 0 0 0 .5px rgba(255,255,255,.18); }}
+  [class*="st-key-sb_"] {{ background:{SURFACE}; border-radius:14px; padding:12px 12px 10px; gap:.35rem;
+      box-shadow:0 0 0 .5px {P["HAIR"]}, 0 1px 2px {P["SHADOW"]}; }}
+  [class*="st-key-sb_"] [data-testid="stWidgetLabel"] p {{ font-size:11px; font-weight:600; color:{SECONDARY};
+      letter-spacing:.02em; text-transform:none; }}
+  .sb-label {{ font-size:11px; font-weight:600; color:{SECONDARY}; letter-spacing:.02em; margin:4px 2px 0; }}
   .sb-note {{ font-size:11px; color:{SECONDARY}; text-align:center; margin-top:2px; }}
-  .sb-head {{ font-size:13px; font-weight:700; margin:0 2px 6px; }}
+  .sb-head {{ font-size:13px; font-weight:600; margin:0 2px 6px; }}
   .sb-head span:last-child {{ display:block; margin-top:3px; }}
   .sb-head .sb-chip:first-child {{ margin-left:0; }}
-  .sb-chip {{ display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:{SECONDARY};
+  .sb-chip {{ display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:600; color:{SECONDARY};
       margin-left:8px; }}
   .sb-chip::before {{ content:""; width:7px; height:7px; border-radius:50%; background:var(--c); }}
   [data-testid="stSidebar"] .src {{ padding:4px 2px; font-size:12px; }}
-  [data-testid="stSidebar"] .stButton > button[kind="primary"] {{ background:{P["ACCENT"]}; border-color:{P["ACCENT"]};
-      box-shadow:0 6px 16px rgba(242,98,46,.28); }}
-  [data-testid="stSidebar"] .stButton > button[kind="primary"] p {{ color:white !important; }}
+  [data-testid="stSidebar"] .stButton > button[kind="primary"] {{ background:{BRAND_GRAD}; border:none;
+      box-shadow:0 4px 12px {P["HERO_GLOW"]}; }}
+  [data-testid="stSidebar"] .stButton > button[kind="primary"] p {{ color:#FFFFFF !important; }}
   [data-testid="stSidebar"] button[data-variant="segmented_control"],
-  [data-testid="stSidebar"] button[data-testid^="stBaseButton-segmented_control"] {{ padding:0 11px; min-height:32px; }}
-  /* segmented controls: black active segment; pills: orange tint (both Streamlit DOM variants) */
-  button[data-variant="segmented_control"], button[data-testid="stBaseButton-segmented_control"] {{
-      background:{SURFACE}; border-color:{SEPARATOR}; }}
-  button[data-variant="segmented_control"] p, button[data-testid="stBaseButton-segmented_control"] p {{ color:{SECONDARY}; }}
+  [data-testid="stSidebar"] button[data-testid^="stBaseButton-segmented_control"] {{ padding:0 11px; min-height:30px; }}
+
+  /* segmented controls: Apple style, a white thumb on a grey track */
+  [data-testid="stButtonGroup"] {{ background:{P["TRACK"]}; border-radius:10px; padding:2px; gap:0; width:fit-content; }}
+  button[data-variant="segmented_control"], button[data-testid^="stBaseButton-segmented_control"] {{
+      background:transparent !important; border:none !important; border-radius:8px !important; box-shadow:none; }}
+  button[data-variant="segmented_control"] p, button[data-testid^="stBaseButton-segmented_control"] p {{
+      color:{LABEL}; font-weight:500; font-size:13px; }}
   button[data-variant="segmented_control"][data-selected="true"], button[data-testid="stBaseButton-segmented_controlActive"] {{
-      background:{P["INK"]} !important; border-color:{P["INK"]} !important; }}
+      background:{P["THUMB"]} !important; box-shadow:0 1px 3px rgba(0,0,0,.12), 0 0 0 .5px rgba(0,0,0,.04) !important; }}
   button[data-variant="segmented_control"][data-selected="true"] p,
-  button[data-testid="stBaseButton-segmented_controlActive"] p {{ color:{P["ON_INK"]} !important; font-weight:600; }}
+  button[data-testid="stBaseButton-segmented_controlActive"] p {{ color:{LABEL} !important; font-weight:600; }}
+  /* pills: tinted Mercyhurst blue when selected */
+  button[data-variant="pills"], button[data-testid^="stBaseButton-pills"] {{ border-radius:999px; }}
   button[data-variant="pills"][data-selected="true"], button[data-testid="stBaseButton-pillsActive"] {{
-      background:{P["ACCENT_SOFT"]} !important; border-color:{P["ACCENT"]} !important; }}
+      background:{P["ACCENT_SOFT"]} !important; border-color:transparent !important; }}
   button[data-variant="pills"][data-selected="true"] p, button[data-testid="stBaseButton-pillsActive"] p {{
       color:{P["ACCENT"]} !important; font-weight:600; }}
-  .brand i {{ width:30px; height:30px; border-radius:9px; background:{P["ACCENT"]}; display:inline-flex;
-      align-items:center; justify-content:center; color:white; font-style:normal; font-size:15px; }}
 
-  /* header: greeting left, user right */
-  .topbar {{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin:4px 0 6px; }}
-  .lt {{ font-size:32px !important; font-weight:700; letter-spacing:-.8px; line-height:1.15; }}
-  .lt-sub {{ font-size:14px; color:{SECONDARY}; margin:4px 0 14px; }}
+  /* header: large title */
+  .topbar {{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin:2px 0 4px; }}
+  .lt {{ font-size:34px !important; font-weight:700; letter-spacing:-.9px; line-height:1.12; }}
+  .lt-sub {{ font-size:15px; color:{SECONDARY}; margin:4px 0 16px; }}
   .me {{ display:flex; align-items:center; gap:10px; background:{SURFACE}; border-radius:999px; padding:5px 14px 5px 5px;
-      box-shadow:0 0 0 1px {P["HAIR"]}; }}
-  .me b {{ width:34px; height:34px; border-radius:50%; background:{P["ACCENT_SOFT"]}; color:{P["ACCENT"]};
-      display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }}
+      box-shadow:0 0 0 .5px {P["HAIR"]}, 0 1px 3px {P["SHADOW"]}; }}
+  .me b {{ width:34px; height:34px; border-radius:50%; background:{BRAND_GRAD}; color:#FFFFFF;
+      display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; }}
   .me div {{ font-size:13px; font-weight:600; line-height:1.2; }}
-  .me small {{ display:block; color:{SECONDARY}; font-weight:500; font-size:11px; }}
-  .h2 {{ font-size:18px; font-weight:700; letter-spacing:-.3px; margin:4px 0 10px; }}
-  .h3 {{ font-size:16px; font-weight:700; margin:0 0 8px; }}
+  .me small {{ display:block; color:{SECONDARY}; font-weight:400; font-size:11px; }}
+  .h2 {{ font-size:22px; font-weight:700; letter-spacing:-.5px; margin:6px 0 10px; }}
+  .h3 {{ font-size:17px; font-weight:600; letter-spacing:-.2px; margin:0 0 8px; }}
 
-  /* tabs: a pill nav with a black active pill */
-  .stTabs [role="tablist"] {{ background:{SURFACE}; border-radius:999px; padding:4px; gap:2px; width:fit-content;
-      margin-bottom:18px; border:none; box-shadow:0 0 0 1px {P["HAIR"]}; }}
-  .stTabs [data-testid="stTab"] {{ height:34px; padding:0 18px; border-radius:999px; background:transparent;
-      border:none; display:flex; align-items:center; }}
-  .stTabs [data-testid="stTab"] p {{ font-size:13px; font-weight:500; color:{SECONDARY}; }}
-  .stTabs [data-testid="stTab"][aria-selected="true"] {{ background:{P["INK"]}; }}
-  .stTabs [data-testid="stTab"][aria-selected="true"] p {{ color:{P["ON_INK"]}; font-weight:600; }}
+  /* tabs: one Apple segmented control */
+  .stTabs [role="tablist"] {{ background:{P["TRACK"]}; border-radius:11px; padding:3px; gap:0; width:fit-content;
+      margin-bottom:20px; border:none; box-shadow:none; }}
+  .stTabs [data-testid="stTab"] {{ height:32px; padding:0 18px; border-radius:8px; background:transparent;
+      border:none; display:flex; align-items:center; transition:background .15s ease; }}
+  .stTabs [data-testid="stTab"] p {{ font-size:13px; font-weight:500; color:{LABEL}; }}
+  .stTabs [data-testid="stTab"][aria-selected="true"] {{ background:{P["THUMB"]};
+      box-shadow:0 1px 3px rgba(0,0,0,.12), 0 0 0 .5px rgba(0,0,0,.04); }}
+  .stTabs [data-testid="stTab"][aria-selected="true"] p {{ color:{LABEL}; font-weight:600; }}
   .stTabs [data-testid="stTab"]:hover p {{ color:{LABEL}; }}
-  .stTabs [data-testid="stTab"][aria-selected="true"]:hover p {{ color:{P["ON_INK"]}; }}
   .stTabs [data-testid="stTab"]::after, .stTabs [role="tablist"]::after {{ display:none !important; }}
   .stTabs [role="tablist"] > :not([data-testid="stTab"]) {{ display:none !important; }}
   .stTabs [data-testid="stTab"] {{ border-bottom:none !important; }}
   .stTabs .react-aria-SelectionIndicator {{ display:none !important; }}
 
-  /* buttons and inputs */
-  .stButton > button, .stDownloadButton > button, .stLinkButton > a {{ border-radius:999px; font-weight:600; font-size:13px;
-      min-height:38px; }}
-  .stButton > button[kind="primary"], .stDownloadButton > button[kind="primary"] {{ background:{P["INK"]};
-      border-color:{P["INK"]}; color:{P["ON_INK"]}; }}
-  .stButton > button[kind="primary"]:hover {{ background:{P["ACCENT"]}; border-color:{P["ACCENT"]}; color:white; }}
-  .stButton > button[kind="primary"] p, .stDownloadButton > button[kind="primary"] p {{ color:{P["ON_INK"]} !important; }}
-  .stButton > button[kind="primary"]:hover p {{ color:white !important; }}
-  .stButton > button[kind="primary"]:disabled {{ background:{P["FILL"]}; border-color:{P["FILL"]}; color:{GRAY}; }}
-  .stButton > button[kind="secondary"], .stDownloadButton > button[kind="secondary"] {{ background:{SURFACE};
-      border:1px solid {SEPARATOR}; }}
-  .stMain [data-testid="stExpander"] details {{ background:{SURFACE}; border:none; border-radius:18px;
-      box-shadow:0 0 0 1px {P["HAIR"]}; }}
-  .stMain [data-testid="stExpander"] summary p {{ font-size:14px; font-weight:600; }}
-  [data-baseweb="select"] > div, .stTextInput input, .stNumberInput input, .stTextArea textarea {{ border-radius:12px; }}
-  .st-key-rr_q input {{ border-radius:999px; }}
+  /* buttons: filled blue (primary) and tinted blue (secondary), rounded rectangles */
+  .stButton > button, .stDownloadButton > button, .stLinkButton > a {{ border-radius:10px; font-weight:600; font-size:13px;
+      min-height:36px; transition:filter .15s ease, background .15s ease; }}
+  .stButton > button[kind="primary"], .stDownloadButton > button[kind="primary"],
+  .stMain button[data-testid="stBaseButton-primary"] {{ background:{"#093C71" if THEME == "light" else "#1E5C9E"} !important;
+      border:none !important; color:#FFFFFF; box-shadow:0 1px 2px {P["SHADOW"]}; }}
+  .stButton > button[kind="primary"]:hover, .stDownloadButton > button[kind="primary"]:hover {{ filter:brightness(1.12); }}
+  .stButton > button[kind="primary"] p, .stDownloadButton > button[kind="primary"] p,
+  .stMain button[data-testid="stBaseButton-primary"] p {{ color:#FFFFFF !important; }}
+  .stButton > button[kind="primary"]:disabled {{ background:{P["FILL"]}; color:{GRAY}; filter:none; }}
+  .stButton > button[kind="secondary"], .stDownloadButton > button[kind="secondary"], .stLinkButton > a,
+  .stMain button[data-testid="stBaseButton-secondary"], .stMain a[data-testid="stBaseLinkButton-secondary"] {{
+      background:{P["ACCENT_SOFT"]} !important; border:none !important; color:{P["ACCENT"]} !important; }}
+  .stButton > button[kind="secondary"] p, .stDownloadButton > button[kind="secondary"] p, .stLinkButton > a p,
+  .stMain button[data-testid="stBaseButton-secondary"] p, .stMain a[data-testid="stBaseLinkButton-secondary"] p {{
+      color:{P["ACCENT"]} !important; }}
+  .stButton > button[kind="secondary"]:hover, .stDownloadButton > button[kind="secondary"]:hover {{ filter:brightness(.96); }}
+  .stMain [data-testid="stExpander"] details {{ background:{SURFACE}; border:none; border-radius:14px;
+      box-shadow:0 0 0 .5px {P["HAIR"]}, 0 1px 3px {P["SHADOW"]}; }}
+  .stMain [data-testid="stExpander"] summary p {{ font-size:15px; font-weight:600; }}
+  [data-baseweb="select"] > div, .stTextInput input, .stNumberInput input, .stTextArea textarea, .stDateInput input {{
+      border-radius:10px; background:{P["FILL"]}; border-color:transparent; }}
+  .st-key-rr_q input {{ border-radius:10px; }}
+  [data-testid="stCheckbox"] [role="checkbox"][aria-checked="true"], [data-baseweb="checkbox"] [data-checked="true"] {{
+      background:{P["ACCENT"]}; border-color:{P["ACCENT"]}; }}
 
-  /* cards: any container keyed card_* */
-  [class*="st-key-card"] {{ background:{SURFACE}; border-radius:22px; padding:18px 20px;
-      box-shadow:0 0 0 1px {P["HAIR"]}, 0 1px 2px {P["SHADOW"]}; }}
+  /* cards: white, rounded, soft shadow (any container keyed card_*) */
+  [class*="st-key-card"] {{ background:{SURFACE}; border-radius:18px; padding:18px 20px;
+      box-shadow:0 0 0 .5px {P["HAIR"]}, 0 1px 3px {P["SHADOW"]}, 0 8px 24px -12px {P["SHADOW"]}; }}
   .c-head {{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:2px; }}
-  .c-title {{ font-size:15px; font-weight:700; letter-spacing:-.2px; }}
-  .c-sub {{ font-size:12px; color:{SECONDARY}; }}
-  .big {{ font-size:34px; font-weight:800; letter-spacing:-1px; font-variant-numeric:tabular-nums; line-height:1.15; margin:6px 0 2px; }}
-  .chip {{ display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:700; }}
+  .c-title {{ font-size:17px; font-weight:600; letter-spacing:-.3px; }}
+  .c-sub {{ font-size:13px; color:{SECONDARY}; }}
+  .big {{ font-size:34px; font-weight:700; letter-spacing:-1px; font-variant-numeric:tabular-nums; line-height:1.15; margin:6px 0 2px; }}
+  .chip {{ display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:600; }}
   .chip.up {{ background:{P["UP_BG"]}; color:{P["UP_FG"]}; }}
   .chip.down {{ background:{P["DOWN_BG"]}; color:{P["DOWN_FG"]}; }}
   .chip.flat {{ background:{P["FILL"]}; color:{SECONDARY}; }}
   .chip + span {{ font-size:11px; color:{SECONDARY}; margin-left:6px; }}
 
-  /* KPI tiles; the first is the orange hero */
+  /* KPI tiles; the first is the Mercyhurst hero (blue to green) */
   .kpis {{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }}
-  .kpi {{ background:{SURFACE}; border-radius:20px; padding:16px 16px 14px; box-shadow:0 0 0 1px {P["HAIR"]};
+  .kpi {{ background:{SURFACE}; border-radius:18px; padding:16px 16px 14px;
+      box-shadow:0 0 0 .5px {P["HAIR"]}, 0 1px 3px {P["SHADOW"]};
       min-height:132px; display:flex; flex-direction:column; justify-content:space-between; }}
-  .kpi .top {{ display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:600; }}
-  .kpi .ic {{ width:30px; height:30px; border-radius:50%; background:{P["FILL"]}; display:inline-flex;
+  .kpi .top {{ display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:600; color:{SECONDARY}; }}
+  .kpi .ic {{ width:30px; height:30px; border-radius:9px; background:{P["ACCENT_SOFT"]}; display:inline-flex;
       align-items:center; justify-content:center; }}
-  .kpi .ic svg {{ width:15px; height:15px; stroke:{LABEL}; }}
-  .kpi .val {{ font-size:30px; font-weight:800; letter-spacing:-.8px; font-variant-numeric:tabular-nums; }}
-  .kpi .val small {{ font-size:13px; font-weight:600; color:{SECONDARY}; margin-left:4px; letter-spacing:0; }}
-  .kpi.hero {{ background:linear-gradient(150deg, {P["ACCENT_2"]} 0%, {P["ACCENT"]} 55%, #D94E1F 100%); color:white;
-      box-shadow:0 10px 24px rgba(242,98,46,.28); }}
-  .kpi.hero .ic {{ background:rgba(255,255,255,.22); }}
-  .kpi.hero .ic svg {{ stroke:white; }}
+  .kpi .ic svg {{ width:15px; height:15px; stroke:{P["ACCENT"]}; }}
+  .kpi .val {{ font-size:32px; font-weight:700; letter-spacing:-1px; font-variant-numeric:tabular-nums; }}
+  .kpi .val small {{ font-size:13px; font-weight:500; color:{SECONDARY}; margin-left:4px; letter-spacing:0; }}
+  .kpi.hero {{ background:{BRAND_GRAD}; color:#FFFFFF; box-shadow:0 12px 28px -8px {P["HERO_GLOW"]}; }}
+  .kpi.hero .top {{ color:rgba(255,255,255,.88); }}
+  .kpi.hero .ic {{ background:rgba(255,255,255,.18); }}
+  .kpi.hero .ic svg {{ stroke:{P["LIME"]}; }}
   .kpi.hero .val small, .kpi.hero .chip + span {{ color:rgba(255,255,255,.85); }}
-  .kpi.hero .chip {{ background:rgba(255,255,255,.22); color:white; }}
+  .kpi.hero .chip {{ background:{P["LIME"]}; color:#16300F; }}
 
   /* mini tiles (sources inside the briefing card) */
   .minis {{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }}
-  .mini {{ background:{P["FILL"]}; border-radius:14px; padding:10px 12px; }}
-  .mini .k {{ font-size:11px; color:{SECONDARY}; font-weight:600; display:flex; align-items:center; gap:6px; }}
+  .mini {{ background:{P["FILL"]}; border-radius:12px; padding:10px 12px; }}
+  .mini .k {{ font-size:11px; color:{SECONDARY}; font-weight:500; display:flex; align-items:center; gap:6px; }}
   .mini .k i {{ width:7px; height:7px; border-radius:50%; display:inline-block; }}
-  .mini .v {{ font-size:20px; font-weight:800; font-variant-numeric:tabular-nums; margin-top:2px; }}
-  .brief-txt {{ font-size:13px; color:{SECONDARY}; line-height:1.5; margin:8px 0 12px; }}
+  .mini .v {{ font-size:20px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:2px; }}
+  .brief-txt {{ font-size:14px; color:{SECONDARY}; line-height:1.5; margin:8px 0 12px; }}
 
   /* recent reports table */
-  .th {{ font-size:12px; color:{SECONDARY}; font-weight:600; padding:6px 0; white-space:nowrap; }}
+  .th {{ font-size:12px; color:{SECONDARY}; font-weight:500; padding:6px 0; white-space:nowrap; }}
   .td {{ font-size:13px; padding:4px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }}
   .td.main {{ white-space:normal; font-weight:500; line-height:1.35; }}
   .td.muted {{ color:{SECONDARY}; }}
-  .st-key-card_reports [data-testid="stHorizontalBlock"] {{ border-bottom:1px solid {SEPARATOR}; padding:6px 0 14px; }}
+  .st-key-card_reports [data-testid="stHorizontalBlock"] {{ border-bottom:.5px solid {SEPARATOR}; padding:6px 0 14px; }}
   .st-key-card_reports [data-testid="stHorizontalBlock"]:first-of-type {{ border-bottom:none; }}
-  .st-key-card_reports .stButton > button {{ min-height:30px; padding:0 8px; }}
+  .st-key-card_reports .stButton > button {{ min-height:28px; padding:0 10px; }}
   .st-key-card_reports .stButton > button p {{ font-size:12px; }}
-  .sdot {{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; }}
+  .sdot {{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; }}
   .sdot::before {{ content:""; width:7px; height:7px; border-radius:50%; background:var(--c); }}
-  .lvl {{ display:inline-block; padding:2px 9px; border-radius:999px; font-size:11px; font-weight:700; color:white; white-space:nowrap; }}
+  .lvl {{ display:inline-block; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:600; color:#FFFFFF; white-space:nowrap; }}
 
-  /* the map card and its floating sheet */
+  /* the map card and its floating glass sheet */
   .st-key-mapwrap {{ position:relative; border-radius:18px; overflow:hidden; background:{P["MAP_BG"]}; gap:0; }}
   .st-key-sheet {{ position:absolute; top:14px; left:14px; width:336px; max-height:612px; overflow-y:auto;
-      z-index:10; background:{P["GLASS"]}; backdrop-filter:saturate(180%) blur(22px);
-      -webkit-backdrop-filter:saturate(180%) blur(22px); border-radius:18px; padding:14px 14px 6px;
-      box-shadow:0 0 0 1px {P["HAIR"]}, 0 10px 30px {P["SHADOW"]}; }}
+      z-index:10; background:{P["GLASS"]}; backdrop-filter:saturate(180%) blur(24px);
+      -webkit-backdrop-filter:saturate(180%) blur(24px); border-radius:16px; padding:14px 14px 6px;
+      box-shadow:0 0 0 .5px {P["HAIR"]}, 0 12px 32px {P["SHADOW"]}; }}
   .st-key-legend {{ position:absolute; right:14px; bottom:14px; left:auto !important; width:auto !important; z-index:10; background:{P["GLASS"]};
       backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-radius:999px; padding:6px 14px;
-      box-shadow:0 0 0 1px {P["HAIR"]}, 0 6px 18px {P["SHADOW"]}; }}
+      box-shadow:0 0 0 .5px {P["HAIR"]}, 0 6px 18px {P["SHADOW"]}; }}
   .legend {{ font-size:12px; color:{SECONDARY}; display:flex; gap:12px; flex-wrap:wrap; max-width:760px; }}
   .legend span::before {{ content:""; display:inline-block; width:8px; height:8px; border-radius:50%;
       margin-right:5px; background:var(--c); vertical-align:0; }}
 
-  /* grouped lists */
-  .group {{ background:{SURFACE}; border-radius:16px; overflow:hidden; }}
+  /* grouped lists (inset-grouped table style) */
+  .group {{ background:{SURFACE}; border-radius:14px; overflow:hidden; }}
   [class*="st-key-card"] .group {{ background:transparent; border-radius:0; }}
   .row {{ display:flex; align-items:center; gap:12px; padding:10px 4px; position:relative; }}
-  .row + .row::before {{ content:""; position:absolute; top:0; left:36px; right:0; border-top:1px solid {SEPARATOR}; }}
-  .dot {{ width:16px; height:16px; border-radius:50%; flex:none; box-shadow:inset 0 0 0 4px {P["DOT_RING"]}; }}
+  .row + .row::before {{ content:""; position:absolute; top:0; left:36px; right:0; border-top:.5px solid {SEPARATOR}; }}
+  .dot {{ width:14px; height:14px; border-radius:50%; flex:none; box-shadow:inset 0 0 0 3px {P["DOT_RING"]}; }}
   .r-main {{ flex:1; min-width:0; }}
-  .r-title {{ font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }}
-  .r-sub {{ font-size:12px; color:{SECONDARY}; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }}
-  .r-trail {{ font-size:15px; font-weight:700; font-variant-numeric:tabular-nums; }}
-  .r-trail.muted {{ color:{GRAY}; font-weight:500; }}
+  .r-title {{ font-size:15px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }}
+  .r-sub {{ font-size:13px; color:{SECONDARY}; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }}
+  .r-trail {{ font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; color:{SECONDARY}; }}
+  .r-trail.muted {{ color:{GRAY}; font-weight:400; }}
   .sheet .row {{ padding:9px 6px; }}
   .sheet .row + .row::before {{ left:36px; }}
-  .sheet-title {{ font-size:19px; font-weight:800; letter-spacing:-.3px; margin:2px 0 2px; }}
-  .sheet-sub {{ font-size:12px; color:{SECONDARY}; margin-bottom:10px; }}
-  .section-label {{ font-size:12px; color:{SECONDARY}; font-weight:600; margin:10px 2px 4px; }}
+  .sheet-title {{ font-size:20px; font-weight:700; letter-spacing:-.4px; margin:2px 0 2px; }}
+  .sheet-sub {{ font-size:13px; color:{SECONDARY}; margin-bottom:10px; }}
+  .section-label {{ font-size:12px; color:{SECONDARY}; font-weight:500; margin:12px 2px 4px; text-transform:uppercase; letter-spacing:.03em; }}
 
   /* summary strip (Facilities) */
-  .strip {{ display:grid; grid-template-columns:repeat(5,1fr); background:{SURFACE}; border-radius:20px;
-      box-shadow:0 0 0 1px {P["HAIR"]}; margin-top:12px; }}
+  .strip {{ display:grid; grid-template-columns:repeat(5,1fr); background:{SURFACE}; border-radius:18px;
+      box-shadow:0 0 0 .5px {P["HAIR"]}, 0 1px 3px {P["SHADOW"]}; margin-top:12px; }}
   .strip > div {{ padding:14px 20px; }}
-  .strip > div + div {{ border-left:1px solid {SEPARATOR}; }}
-  .strip .k {{ font-size:12px; color:{SECONDARY}; font-weight:600; }}
-  .strip .v {{ font-size:28px; font-weight:800; letter-spacing:-.6px; font-variant-numeric:tabular-nums; }}
-  .strip .v small {{ font-size:12px; font-weight:600; color:{SECONDARY}; margin-left:4px; letter-spacing:0; }}
+  .strip > div + div {{ border-left:.5px solid {SEPARATOR}; }}
+  .strip .k {{ font-size:12px; color:{SECONDARY}; font-weight:500; }}
+  .strip .v {{ font-size:28px; font-weight:700; letter-spacing:-.7px; font-variant-numeric:tabular-nums; }}
+  .strip .v small {{ font-size:12px; font-weight:500; color:{SECONDARY}; margin-left:4px; letter-spacing:0; }}
 
-  .trio {{ display:grid; grid-template-columns:repeat(3,1fr); background:{P["FILL"]}; border-radius:14px; margin:6px 0 4px; }}
+  .trio {{ display:grid; grid-template-columns:repeat(3,1fr); background:{P["FILL"]}; border-radius:12px; margin:6px 0 4px; }}
   .trio > div {{ padding:9px 10px; }}
-  .trio > div + div {{ border-left:1px solid {SEPARATOR}; }}
-  .trio .k {{ font-size:11px; color:{SECONDARY}; font-weight:600; }}
-  .trio .v {{ font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; }}
+  .trio > div + div {{ border-left:.5px solid {SEPARATOR}; }}
+  .trio .k {{ font-size:11px; color:{SECONDARY}; font-weight:500; }}
+  .trio .v {{ font-size:22px; font-weight:700; font-variant-numeric:tabular-nums; }}
 
-  .cal {{ width:44px; flex:none; text-align:center; background:{SURFACE}; border-radius:12px;
-      box-shadow:0 0 0 1px {SEPARATOR}; overflow:hidden; }}
-  .cal .m {{ font-size:10px; font-weight:700; color:white; background:{P["ACCENT"]}; padding:2px 0; text-transform:uppercase; }}
-  .cal .d {{ font-size:18px; font-weight:800; padding:1px 0 3px; font-variant-numeric:tabular-nums; }}
+  /* calendar tile (Apple Calendar style: blue month band) */
+  .cal {{ width:44px; flex:none; text-align:center; background:{SURFACE}; border-radius:10px;
+      box-shadow:0 0 0 .5px {SEPARATOR}, 0 1px 2px {P["SHADOW"]}; overflow:hidden; }}
+  .cal .m {{ font-size:10px; font-weight:600; color:#FFFFFF; background:{P["ACCENT"] if THEME == "light" else "#1E5C9E"};
+      padding:2px 0; text-transform:uppercase; letter-spacing:.04em; }}
+  .cal .d {{ font-size:18px; font-weight:600; padding:1px 0 3px; font-variant-numeric:tabular-nums; }}
 
   .bars .b-row {{ display:grid; grid-template-columns:150px 1fr 34px; align-items:center; gap:10px; padding:5px 0; font-size:13px; }}
-  .bars .track {{ height:8px; border-radius:4px; background:{P["TRACK"]}; overflow:hidden; }}
-  .bars .fill {{ height:100%; border-radius:4px; }}
+  .bars .track {{ height:6px; border-radius:3px; background:{P["TRACK"]}; overflow:hidden; }}
+  .bars .fill {{ height:100%; border-radius:3px; }}
 
-  .badge {{ display:inline-block; padding:1px 8px; border-radius:6px; font-size:12px; font-weight:600; color:white; }}
-  a.open {{ color:{P["ACCENT"]}; text-decoration:none; font-size:13px; font-weight:600; }}
-  .card {{ background:{SURFACE}; border-radius:20px; padding:16px 18px; box-shadow:0 0 0 1px {P["HAIR"]}; height:100%; }}
+  .badge {{ display:inline-block; padding:1px 8px; border-radius:6px; font-size:12px; font-weight:600; color:#FFFFFF; }}
+  a.open, .stMain a {{ color:{P["ACCENT"]}; text-decoration:none; font-weight:500; }}
+  a.open {{ font-size:13px; font-weight:600; }}
+  .card {{ background:{SURFACE}; border-radius:18px; padding:16px 18px; box-shadow:0 0 0 .5px {P["HAIR"]}, 0 1px 3px {P["SHADOW"]}; height:100%; }}
   .empty {{ color:{SECONDARY}; font-size:13px; padding:16px 12px; text-align:center; }}
-  .scancard {{ background:{SURFACE}; border-radius:20px; padding:14px 18px; margin:0 0 14px;
-               box-shadow:0 0 0 1px {P["HAIR"]}; }}
+  .scancard {{ background:{SURFACE}; border-radius:18px; padding:14px 18px; margin:0 0 14px;
+               box-shadow:0 0 0 .5px {P["HAIR"]}, 0 1px 3px {P["SHADOW"]}; }}
   .scancard .hd {{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }}
-  .scancard .hd b {{ font-size:15px; font-weight:700; }}
+  .scancard .hd b {{ font-size:15px; font-weight:600; }}
   .scancard .hd span {{ color:{SECONDARY}; font-size:13px; }}
   .scancard .tiers {{ display:flex; gap:8px; margin:10px 0 6px; flex-wrap:wrap; }}
-  .scancard .tiers div {{ border-radius:999px; padding:5px 12px; font-size:13px; font-weight:600; }}
-  .scancard .tiers em {{ font-style:normal; font-weight:800; font-size:16px; margin-right:4px; }}
+  .scancard .tiers div {{ border-radius:8px; padding:5px 12px; font-size:13px; font-weight:500; }}
+  .scancard .tiers em {{ font-style:normal; font-weight:700; font-size:16px; margin-right:4px; }}
   .scancard .dl {{ font-size:13px; padding:3px 0; display:flex; gap:8px; align-items:center; }}
   .scancard .dl i {{ width:8px; height:8px; border-radius:50%; display:inline-block; flex:none; }}
-  [data-testid="stVegaLiteChart"] {{ border-radius:16px; overflow:hidden; }}
+  [data-testid="stVegaLiteChart"] {{ border-radius:14px; overflow:hidden; }}
   .src {{ display:flex; align-items:center; gap:8px; font-size:13px; padding:3px 0; }}
   .src i {{ width:8px; height:8px; border-radius:50%; display:inline-block; flex:none; }}
   .src em {{ color:{SECONDARY}; font-style:normal; margin-left:auto; font-variant-numeric:tabular-nums; }}
 
   .mode {{ display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; font-size:11px;
-      font-weight:700; vertical-align:middle; margin-left:10px; letter-spacing:.3px; }}
+      font-weight:600; vertical-align:middle; margin-left:10px; letter-spacing:.2px; }}
   .mode::before {{ content:""; width:7px; height:7px; border-radius:50%; background:currentColor; }}
   .mode.live {{ background:{P["LIVE_BG"]}; color:{P["LIVE_FG"]}; }}
   .mode.demo {{ background:{P["DEMO_BG"]}; color:{P["DEMO_FG"]}; }}
-  .demo-bar {{ background:{P["DEMO_BG"]}; color:{P["DEMO_TEXT"]}; border-radius:14px; padding:9px 14px; font-size:13px; margin:0 0 14px; }}
-  .brief {{ background:{SURFACE}; border-radius:20px; padding:18px 22px; box-shadow:0 0 0 1px {P["HAIR"]}; margin-top:12px; }}
-  .brief h4 {{ font-size:12px; font-weight:600; color:{SECONDARY}; margin:12px 0 2px; }}
+  .demo-bar {{ background:{P["DEMO_BG"]}; color:{P["DEMO_TEXT"]}; border-radius:12px; padding:9px 14px; font-size:13px; margin:0 0 14px; }}
+  .brief {{ background:{SURFACE}; border-radius:18px; padding:18px 22px; box-shadow:0 0 0 .5px {P["HAIR"]}, 0 1px 3px {P["SHADOW"]}; margin-top:12px; }}
+  .brief h4 {{ font-size:12px; font-weight:500; color:{SECONDARY}; margin:12px 0 2px; text-transform:uppercase; letter-spacing:.03em; }}
   .brief h4:first-child {{ margin-top:0; }}
   .brief p {{ font-size:15px; line-height:1.5; margin:0; max-width:80ch; }}
-  .col-title {{ font-size:15px; font-weight:700; margin:18px 0 8px; }}
+  .col-title {{ font-size:17px; font-weight:600; margin:18px 0 8px; }}
   .chk {{ display:flex; gap:10px; align-items:center; font-size:13px; padding:4px 0; }}
   .chk b {{ width:20px; height:20px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
-      font-size:12px; color:white; flex:none; }}
-  .icard {{ background:{SURFACE}; border-radius:18px; padding:14px 16px 10px; box-shadow:0 0 0 1px {P["HAIR"]}; }}
-  .icard .top {{ display:flex; gap:8px; align-items:center; font-size:12px; font-weight:600; color:{SECONDARY}; }}
-  .icard .title {{ font-size:15px; font-weight:700; margin:6px 0 4px; line-height:1.35; }}
+      font-size:12px; color:#FFFFFF; flex:none; }}
+  .icard {{ background:{SURFACE}; border-radius:16px; padding:14px 16px 10px; box-shadow:0 0 0 .5px {P["HAIR"]}, 0 1px 3px {P["SHADOW"]}; }}
+  .icard .top {{ display:flex; gap:8px; align-items:center; font-size:12px; font-weight:500; color:{SECONDARY}; }}
+  .icard .title {{ font-size:15px; font-weight:600; margin:6px 0 4px; line-height:1.35; }}
   .icard .facts {{ display:flex; flex-wrap:wrap; gap:4px 16px; font-size:12px; color:{SECONDARY}; }}
   .icard .facts b {{ color:{LABEL}; font-weight:600; }}
   .icard .why {{ font-size:12px; color:{LABEL}; margin-top:6px; }}
-  .pill {{ display:inline-block; padding:2px 9px; border-radius:999px; font-size:11px; font-weight:700; }}
+  .pill {{ display:inline-block; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:600; }}
   .kv {{ display:grid; grid-template-columns:180px 1fr; gap:4px 14px; font-size:14px; margin:4px 0 10px; }}
   .kv div:nth-child(odd) {{ color:{SECONDARY}; }}
-  .factor {{ display:flex; justify-content:space-between; font-size:14px; padding:5px 0; border-bottom:1px solid {SEPARATOR}; }}
-  .factor span:last-child {{ font-variant-numeric:tabular-nums; font-weight:700; }}
+  .factor {{ display:flex; justify-content:space-between; font-size:14px; padding:6px 0; border-bottom:.5px solid {SEPARATOR}; }}
+  .factor span:last-child {{ font-variant-numeric:tabular-nums; font-weight:600; }}
   .health {{ display:grid; grid-template-columns:20px 120px 1fr; gap:4px 10px; font-size:13px; align-items:start; padding:8px 0;
-      border-bottom:1px solid {SEPARATOR}; }}
+      border-bottom:.5px solid {SEPARATOR}; }}
   .health i {{ width:9px; height:9px; border-radius:50%; display:inline-block; margin-top:5px; }}
-  [data-testid="stDialog"] div[role="dialog"] {{ background:{SURFACE}; color:{LABEL}; border-radius:24px; }}
+  [data-testid="stDialog"] div[role="dialog"] {{ background:{SURFACE}; color:{LABEL}; border-radius:22px;
+      box-shadow:0 24px 64px rgba(0,0,0,.25); }}
   [data-testid="stSidebar"] [data-testid="stMarkdownContainer"], .stMain [data-testid="stMarkdownContainer"] {{ color:{LABEL}; }}
-  :focus-visible {{ outline:3px solid {P["ACCENT"]} !important; outline-offset:2px; }}
+  ::selection {{ background:{P["ACCENT_SOFT"]}; }}
+  :focus-visible {{ outline:3px solid {P["ACCENT_2"]} !important; outline-offset:2px; }}
   @media (max-width: 1100px) {{ .kpis {{ grid-template-columns:1fr; }} .strip {{ grid-template-columns:repeat(2,1fr); }} }}
   @media (prefers-reduced-motion: reduce) {{ * {{ transition:none !important; animation:none !important; }} }}
 </style>"""
@@ -977,7 +1003,7 @@ with tab_dash:
             y=alt.Y("count():Q", title=None, axis=alt.Axis(grid=True, gridColor=P["TRACK"], gridDash=[3, 3], domain=False,
                                                            ticks=False, labelColor=SECONDARY, tickMinStep=1)),
             color=alt.Color("level:N", scale=alt.Scale(domain=["Act now", "Alert", "Watch", "Logged"],
-                                                       range=[ACT_RED, ACCENT, P["WATCH"], P["CHART_LOG"]]),
+                                                       range=[ACT_RED, P["ALERT_C"], P["WATCH"], P["CHART_LOG"]]),
                             legend=alt.Legend(orient="top", title=None, direction="horizontal", labelColor=SECONDARY,
                                               symbolType="circle", labelFontSize=11, offset=6)),
             order=alt.Order("level:N", sort="ascending"),
@@ -1184,7 +1210,7 @@ with tab_dash:
             view = pdk.ViewState(latitude=42.895, longitude=-78.905, zoom=11.15, pitch=45 if "3D" in view_opts else 0,
                                  bearing=-12 if "3D" in view_opts else 0)
         map_h = 820 if "Large" in view_opts else 600
-        deck = pdk.Deck(layers=layers, initial_view_state=view, map_style=pdk.map_styles.CARTO_DARK if THEME == "dark" else pdk.map_styles.CARTO_ROAD,
+        deck = pdk.Deck(layers=layers, initial_view_state=view, map_style=pdk.map_styles.CARTO_DARK if THEME == "dark" else pdk.map_styles.CARTO_LIGHT,
                         tooltip={"html": "{tip}", "style": {"backgroundColor": P["TOOLTIP_BG"], "color": LABEL,
                                                             "fontSize": "12px", "borderRadius": "10px", "padding": "8px 10px",
                                                             "maxWidth": "320px", "boxShadow": "0 6px 20px rgba(0,0,0,.15)",
