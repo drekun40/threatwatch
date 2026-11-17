@@ -3,7 +3,8 @@
 Watches 27 Buffalo and Erie County sites across open sources and sensor feeds. Each item is scored, rated with the Admiralty system and placed on a live map. Alerts go to Teams or email, and a Word report is built each week.
 
 ```
-Google + Bing News · GDELT events · 11 local outlet feeds        (what's published)
+Google + Bing News · GDELT events · 11 local outlet feeds        (what's published, full article for promising items)
+Mobilize public gatherings                                       (planned crowds)
 Bluesky · Mastodon · Telegram · YouTube                          (what people post)
 NWS alerts · FAA flight restrictions                             (official notices)
 Open Data Buffalo police incidents · 511NY traffic events        (official records)
@@ -41,6 +42,7 @@ python run.py selftest      # connects to every source and reports what it found
 |---|---|---|---|
 | Google News + Bing News | Searches per site plus threat sweeps ("bomb threat" … Buffalo / Erie County); Bing links go straight to the publisher | none | — |
 | Local outlet feeds | WGRZ, WKBW, WIVB, Spectrum News, Investigative Post, Buffalo Rising | none | — |
+| Mobilize | Publicly announced in-person rallies, marches and town halls within 1 km of a site, up to 14 days ahead. Crowd context like Ticketmaster events: no organiser or attendee data is kept | none | — |
 | GDELT | 15-minute event files: news articles machine-coded as threats, protests, assaults etc. and geocoded within 40 km of Buffalo. Low volume for Buffalo (a few articles a day), but no rate limit | none | — |
 | FAA TFRs | Temporary flight restrictions over the Buffalo area (VIP visits, security) | none | — |
 | Mastodon | Public posts with Buffalo hashtags | none | — |
@@ -121,6 +123,8 @@ The Mac installer schedules `run.py scan --auto` every hour. It does a full scan
 - from 6 h before until 3 h after a scheduled event at a site (games, concerts, your own events)
 - for 6 h after an open alert
 
+If no scan has run for over 2 hours (the Mac slept or was offline), the next hour runs a full scan, and every full scan reaches back to the previous full scan (up to 72 h, `catchup_max_hours`) instead of a fixed 24 h, so a night or weekend away doesn't drop stories.
+
 Every other hour it runs a **light scan** (`scan.light` in `config/sources.yaml`): the local outlet feeds, GDELT, NWS, FAA TFRs, Mastodon, Bluesky and ADS-B, without the Google/Bing searches (which would be throttled hourly) and without Open Data (which lags a day). A light scan takes under a minute, sends Act now/Alert items as usual, and sends no summary email. Set `scan.light.enabled: false` to skip quiet hours instead. All of this is set in the `scan:` block of `config/sources.yaml`. All sources run in parallel, so a full scan takes about a minute (a source that hangs is skipped after `max_seconds`).
 
 Other systems:
@@ -149,6 +153,7 @@ The priority score (0–100) ranks items for review. It is **not** a probability
 | Each independent corroborating source within 12 h | +10 (max +20) |
 | Scheduled event at that venue within ±6 h | +5 |
 | Under 3 hours old | +5 |
+| Site placed by a nearby street/intersection, not named | −5 |
 | Wording reads as past, legal or non-live coverage (`config/filters.yaml`) | −15 |
 
 `score = clamp(sum, 0, 100)`. The level comes from `tier_for()` in `threatwatch/scoring.py`, with thresholds under `tiers:` in `config/sources.yaml`:
@@ -166,7 +171,9 @@ The rating is a source letter plus a credibility number:
 - **Source:** A official record or sensor, B established media, C known account, D unverified social.
 - **Credibility:** 2 = corroborated by 2+ sources, 3 = by one, 4 = uncorroborated, 1 = analyst-confirmed.
 
-Located items (police incidents, traffic events, aircraft, vessels) match the nearest site whose geofence contains them. Text items match by site name or alias.
+Located items (police incidents, traffic events, aircraft, vessels) match the nearest site whose geofence contains them. Text items match by site name or alias, or by a **nearby street or intersection** (`nearby:` in `config/facilities.yaml`, built by `tools/build_gazetteer.py` from US Census TIGER roads: streets near only that site, and intersections within 175 m, each owned by its nearest site). Nearby terms are case-sensitive, need Buffalo context, and score −5 ("Placed by nearby street, not named").
+
+**Full article text:** search results and feeds carry a headline and one line, so before matching, up to 40 promising new items per scan (Buffalo-area threat items with no site, then local stories) have their article read once (`scan.article_text`). Only the lead paragraphs are kept, in the post's `body`; robots.txt is honoured and Google News links and throttling domains are skipped. Evidence found **only** in the article text can place an item and raise its score, but never makes it an Alert: if the site or the main threat category isn't in the headline, the item is capped at Watch for an analyst to confirm.
 
 **Collection reliability:** every HTTP request from a collector is retried up to 3 times with a short backoff (0.8 s, then 1.6 s) on connection errors, timeouts and HTTP 500/502/503/504. Rate limits (429) aren't retried. A source that still fails is marked "not reachable" and the rest of the scan continues. A source that works but loses part of its requests (one dead feed of eleven, say) is marked working with a **warning** naming what failed; warnings show in the scan output (`~` lines), the scan's source table and the collection log. Each source's time is its own collection time.
 

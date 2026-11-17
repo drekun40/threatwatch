@@ -41,6 +41,7 @@ def get_collectors(sources_cfg: dict):
     from .ais import AISCollector
     from .bluesky import BlueskyCollector
     from .events import EventsCollector
+    from .gatherings import GatheringsCollector
     from .gdelt import GDELTCollector
     from .mastodon import MastodonCollector
     from .tfr import TFRCollector
@@ -55,6 +56,7 @@ def get_collectors(sources_cfg: dict):
     from .youtube import YouTubeCollector
 
     registry = {"schedules": SchedulesCollector, "events": EventsCollector,   # first: event-day context before scoring
+                "gatherings": GatheringsCollector,
                 "news": NewsCollector, "gdelt": GDELTCollector, "nws": NWSCollector, "tfr": TFRCollector,
                 "mastodon": MastodonCollector, "bluesky": BlueskyCollector,
                 "opendata": OpenDataCollector, "ny511": NY511Collector, "telegram": TelegramCollector,

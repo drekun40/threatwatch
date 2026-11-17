@@ -110,8 +110,9 @@ def test_file_stamps_are_quarter_hours():
 
 
 def test_gdelt_events_keeps_nearby_threat_events_once_per_article(monkeypatch, ctx):
-    latest = "20261109201500"
-    lines = [row(), row(root="14"),                                  # same article, two event types
+    t = NOW - timedelta(minutes=30)
+    latest = (t - timedelta(minutes=t.minute % 15)).strftime("%Y%m%d%H%M00")   # a real quarter-hour, 30 min ago
+    lines = [row(added=latest), row(root="14", added=latest),                                  # same article, two event types
              row(root="04", url="https://x.com/a/meeting-with-mayor-today"),     # not a threat code
              row(adm1="USCA", url="https://x.com/b/stabbing-in-los-angeles"),     # wrong state
              row(lat="40.71", lon="-74.00", url="https://x.com/c/stabbing-in-new-york-city")]   # NYC: too far

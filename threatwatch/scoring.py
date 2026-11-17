@@ -5,6 +5,7 @@ Score (0–100) is built from:
   breadth         +5 per additional threat category                (max +10)
   context         +5 if a context term (concert, waterfront...) co-occurs
   facility        +10 priority-1 site, +5 priority-2, 0 otherwise, -5 area-only
+  nearby          -5 if the site was placed by a nearby street/intersection, not named (facilities.yaml nearby:)
   source          A +10, B +5, C 0, D -5, E/F -10
   corroboration   +10 per independent source reporting the same facility/category
                   inside the corroboration window                (max +20)
@@ -12,6 +13,8 @@ Score (0–100) is built from:
   event day       +5 if a scheduled event at that venue is within ±6 h (Ticketmaster)
 
   dampener        -15 if the wording reads as past, legal or non-live coverage (config/filters.yaml)
+  article text    when the site or the top threat category is found only in the full article text
+                  (not the headline), the item is capped at Watch: an analyst confirms before anyone is alerted
   score = clamp(sum of the above, 0, 100)
 
 Tiers (thresholds in config/sources.yaml `tiers:`; see tier_for):
@@ -76,6 +79,9 @@ def score_match(post: Post, match: Match, fid: str, matcher: Matcher,
         pts = {1: 10, 2: 5}.get(prio, 0)
         if pts:
             f.append((f"Site priority {prio}", pts))
+        near = (getattr(match, "proximity", None) or {}).get(fid)
+        if near:
+            f.append((f"Placed by nearby street, not named: {near}", -5))
     src_pts = SOURCE_POINTS.get(post.reliability, -5)
     if src_pts:
         f.append((f"Source reliability {post.reliability}", src_pts))
@@ -94,6 +100,12 @@ def score_match(post: Post, match: Match, fid: str, matcher: Matcher,
     tier, note = tier_for(score, fid, top_weight, post.reliability, corroborating, tiers)
     if note:
         f.append((note, 0))
+    from_body = fid in (getattr(match, "body_sites", None) or []) or \
+        bool(cats and cats[0] in (getattr(match, "body_categories", None) or []))
+    if from_body and tier in ("ACT", "ALERT"):
+        what = "site" if fid in match.body_sites else f"main threat ({matcher.label(cats[0])})"
+        tier = "WATCH"
+        f.append((f"Capped at Watch: {what} found only in the article text, not the headline", 0))
 
     cred = 2 if corroborating >= 2 else 3 if corroborating == 1 else 4
     terms = sorted({t for c in cats for t in match.threat_terms[c]}, key=str.lower)

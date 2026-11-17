@@ -2,7 +2,9 @@
 # Credentials live in .env, never in this file.
 
 scan:
-  lookback_hours: 24          # ignore anything older than this on each scan
+  lookback_hours: 24          # ignore anything older than this on each scan…
+  catchup_max_hours: 72       # …except a full scan reaches back to the previous full scan, up to this
+  catchup_after_hours: 2      # hourly mode: no scan for longer than this (asleep/offline) -> full scan next
   corroboration_window_hours: 12
   parallel_sources: 8         # sources collected at the same time
   base_hours: [7, 15]         # hourly schedule (scan --auto) always scans at these local hours…
@@ -13,6 +15,12 @@ scan:
   light:                      # every other hour (scan --auto): a quick scan of fast, free sources
     enabled: true             # alerts still go out; no summary email (that stays with the full scans)
     sources: [news, gdelt, nws, tfr, mastodon, bluesky, adsb]   # news = local outlet feeds only, no searches
+  article_text:               # read the full article for promising new news items before matching
+    enabled: true
+    max_per_scan: 40          # local stories and Buffalo-area threat items first
+    timeout: 10
+    max_chars: 3000           # lead paragraphs only; sidebars further down are ignored
+    skip_domains: [buffalonews.com]   # throttles automated requests (429)
 
 tiers:                        # score thresholds (see threatwatch/scoring.py, tier_for)
   act: 85                     # Act now: score >= act at a monitored site AND (corroborated OR source in act_reliability)
@@ -31,7 +39,10 @@ sources:
     sweep_min_weight: 8
     names_per_site: 3
     parallel: 8               # simultaneous requests
-    extra_queries: []         # your own searches, e.g.  - '"Main Street" Buffalo police'
+    extra_queries:            # your own searches, e.g.  - '"Main Street" Buffalo police'
+      # federal court: charges and pleas from the US Attorney for the Western District of New York
+      - '"Western District of New York" (threat OR threatened OR threatening OR charged OR indicted OR pleaded)'
+      - '"U.S. Attorney" Buffalo (threat OR firearm OR explosive OR arson OR "hoax")'
     feeds:                    # local outlet RSS — check each URL loads; outlets move feeds occasionally
       - name: WGRZ (NBC 2)
         url: https://www.wgrz.com/feeds/syndication/rss/news/local
@@ -66,6 +77,13 @@ sources:
       - name: WBFO (NPR Buffalo)
         url: https://www.wbfo.org/local-news.rss
         reliability: B
+
+  gatherings:                 # Planned public gatherings near sites (Mobilize). Free, no key. Crowd context, not threats.
+    enabled: true
+    zipcodes: ["14202", "14203", "14127", "14068"]   # downtown, waterfront/Cobblestone, Orchard Park, Getzville
+    max_dist_miles: 10
+    max_km: 1.0               # within this distance of a site
+    days_ahead: 14
 
   gdelt:                      # GDELT global news index (updates every 15 min). Free, no key.
     enabled: true

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-17: collect more from what's already published
+- **Nearby streets place stories at sites.** 64% of hits were "Buffalo area" with no site. Each site now has a `nearby:` list (streets near only that site, plus intersections within 175 m, each owned by the nearest site) generated from US Census TIGER roads by `tools/build_gazetteer.py`. Case-sensitive, Buffalo context required, −5 in the score. Common street names (Main, North, Church…) only count inside an intersection after a Batavia "North Street" story was placed at the JCC.
+- **Full article text** for up to 40 promising new items per scan (`scan.article_text`), stored in a new `posts.body` column and read by the matcher and rescoring. robots.txt honoured; Google News links and buffalonews.com (429) skipped. Evidence only in the article text is capped at Watch (regression: a former Bills player's arrest reached Alert at Highmark Stadium).
+- **Catch-up after missed hours:** no scan for 2 h -> full scan next hour; full scans reach back to the previous full scan, up to 72 h.
+- **Planned public gatherings** (Mobilize, free): in-person rallies, marches and town halls within 1 km of a site go into the events table as crowd context (event bonus, hourly full scans around them, dashboard). No organiser or attendee data.
+- **Federal court activity** through two news searches for the Western District of New York and the US Attorney in Buffalo. (The court publishes no filing RSS, CourtListener needs a token and has little of this district, and justice.gov refuses automated requests.)
+- 16 new offline tests (95 in total); tests can no longer reach the network through article reading.
+
 ## 2026-11-09: reliability audit, wider coverage
 Found by checking 102 scans of history in the database, then fixed:
 - **GDELT never returned anything** (35 rate-limit errors, 33 empty runs in 68 scans): its search API now answers 429 even to the first request. It now reads GDELT's 15-minute event files instead (no rate limit, ~100 KB each), keeping threat-type events geocoded within 40 km of Buffalo. The search API stays available as `gdelt.mode: doc`.

@@ -86,7 +86,8 @@ class Store:
         self.conn.executescript(SCHEMA)
         for ddl in ("ALTER TABLE scans ADD COLUMN detail TEXT",        # upgrades for older databases
                     "ALTER TABLE hits ADD COLUMN factors TEXT",
-                    "ALTER TABLE hits ADD COLUMN reviewed_at TEXT"):
+                    "ALTER TABLE hits ADD COLUMN reviewed_at TEXT",
+                    "ALTER TABLE posts ADD COLUMN body TEXT"):
             try:
                 self.conn.execute(ddl)
             except sqlite3.OperationalError:
@@ -117,11 +118,17 @@ class Store:
         if dup:
             return "same_story"
         self.conn.execute(
-            "INSERT INTO posts VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO posts (uid, source, source_name, native_id, url, author, text, created_at, collected_at, "
+            "reliability, is_local, fingerprint, engagement, lat, lon, body) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (p.uid, p.source, p.source_name, p.native_id, p.url, p.author, p.text,
              p.created_at.isoformat(), utcnow().isoformat(), p.reliability, int(p.is_local),
-             p.text_fingerprint, json.dumps(p.engagement), p.lat, p.lon))
+             p.text_fingerprint, json.dumps(p.engagement), p.lat, p.lon, getattr(p, "body", "") or None))
         return "new"
+
+    def is_stored(self, p: Post) -> bool:
+        """True if add_post_status would not store this post (same link, or same story from this source)."""
+        return bool(self.conn.execute("SELECT 1 FROM posts WHERE uid=? OR (fingerprint=? AND source=?) LIMIT 1",
+                                      (p.uid, p.text_fingerprint, p.source)).fetchone())
 
     # ---- hits --------------------------------------------------------------
     def add_hit(self, h: Hit) -> int | None:
@@ -229,6 +236,20 @@ class Store:
         if note is not None:
             self.conn.execute("UPDATE hits SET analyst_note=? WHERE id=?", (note, hit_id))
         self.conn.commit()
+
+    def last_scan_finished(self, kind: str | None = None):
+        """When the last completed scan finished (aware UTC), optionally only "full" or "light" scans.
+        Scans from before the light/full split count as full."""
+        rows = self.conn.execute("SELECT finished_at, detail FROM scans WHERE finished_at IS NOT NULL "
+                                 "ORDER BY id DESC LIMIT 200").fetchall()
+        for r in rows:
+            try:
+                k = json.loads(r["detail"] or "{}").get("kind") or "full"
+            except ValueError:
+                k = "full"
+            if kind is None or k == kind:
+                return datetime.fromisoformat(r["finished_at"])
+        return None
 
     def begin_scan(self, started) -> int:
         cur = self.conn.execute("INSERT INTO scans(started_at) VALUES (?)", (started.isoformat(),))

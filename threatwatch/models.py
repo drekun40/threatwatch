@@ -39,6 +39,7 @@ class Post:
     engagement: dict = field(default_factory=dict)
     lat: float | None = None
     lon: float | None = None
+    body: str = ""            # lead paragraphs of the article, when fetched (threatwatch/article.py)
 
     @property
     def uid(self) -> str:
@@ -58,6 +59,9 @@ class Match:
     context_terms: list[str]
     area_only: bool = False               # matched Buffalo but no specific facility
     dampeners: list = field(default_factory=list)   # wording that suggests past/legal/non-live coverage
+    proximity: dict = field(default_factory=dict)   # site -> nearby street/intersection that placed it there
+    body_sites: list = field(default_factory=list)       # sites found only in the article text, not the headline
+    body_categories: list = field(default_factory=list)  # threat categories found only in the article text
 
     @property
     def is_hit(self) -> bool:

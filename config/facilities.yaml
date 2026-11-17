@@ -29,6 +29,7 @@ facilities:
     priority: 3
     aliases: ["Broadway Market"]
     ambiguous: []
+    nearby: [Bryson & Memorial, Bryson and Memorial, Bryson at Memorial, Clark & Paderewski, Clark and Paderewski, Clark at Paderewski, Clark St, Clark Street, Concord St, Concord Street, Kent & Playter, Kent & Sears, Kent and Playter, Kent and Sears, Kent at Playter, Kent at Sears, Kent St, Kent Street, Lombard St, Lombard Street, Memorial & Bryson, Memorial and Bryson, Memorial at Bryson, Paderewski & Clark, Paderewski & Playter, Paderewski & Sears, Paderewski and Clark, Paderewski and Playter, Paderewski and Sears, Paderewski at Clark, Paderewski at Playter, Paderewski at Sears, Playter & Kent, Playter & Paderewski, Playter and Kent, Playter and Paderewski, Playter at Kent, Playter at Paderewski, S Market St, Sears & Kent, Sears & Paderewski, Sears and Kent, Sears and Paderewski, Sears at Kent, Sears at Paderewski, South Market St, South Market Street]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: central_terminal
     name: Central Terminal
@@ -40,6 +41,7 @@ facilities:
     priority: 3
     aliases: ["Central Terminal", "Buffalo Central Terminal", "Paderewski Dr", "Paderewski Drive"]
     ambiguous: []
+    nearby: [Curtiss & Peckham, Curtiss and Peckham, Curtiss at Peckham, Curtiss St, Curtiss Street, Hilton St, Hilton Street, Paderewski & Sweet, Paderewski and Sweet, Paderewski at Sweet, Peckham & Curtiss, Peckham and Curtiss, Peckham at Curtiss, Peckham St, Peckham Street, Sweet & Paderewski, Sweet and Paderewski, Sweet at Paderewski]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: cazenovia_park
     name: Cazenovia Park
@@ -51,6 +53,7 @@ facilities:
     priority: 3
     aliases: ["Cazenovia Park", "Caz Park", "Cazenovia Casino"]
     ambiguous: ["Caz"]
+    nearby: [Beyer & Maywood, Beyer and Maywood, Beyer at Maywood, Beyer Pl, Beyer Place, Cazenovia & Park, Cazenovia and Park, Cazenovia at Park, Cazenovia Parkway, Cazenovia Pkwy, Edson St, Edson Street, Maywood & Beyer, Maywood & Newman, Maywood and Beyer, Maywood and Newman, Maywood at Beyer, Maywood at Newman, Maywood Pl, Maywood Place, Mount Vernon Ave, Mount Vernon Avenue, Newman & Maywood, Newman and Maywood, Newman at Maywood, Newman Pl, Newman Place, Park & Cazenovia, Park and Cazenovia, Park at Cazenovia]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: sahlen_field
     name: Sahlen Field (Buffalo Bisons)
@@ -62,6 +65,7 @@ facilities:
     priority: 2
     aliases: ["Sahlen Field", "Sahlen's Field", "Sahlens Field", "Buffalo Bisons", "#Bisons", "Coca-Cola Field"]
     ambiguous: ["Bisons", "the ballpark"]
+    nearby: [Booth & Ellicott, Booth Alley, Booth Aly, Booth and Ellicott, Booth at Ellicott, Ellicott & Booth, Ellicott & Swan, Ellicott and Booth, Ellicott and Swan, Ellicott at Booth, Ellicott at Swan, Main & Seneca, Main & West Seneca, Main and Seneca, Main and West Seneca, Main at Seneca, Main at West Seneca, O'Ak & Seneca, O'Ak & Swan, O'Ak and Seneca, O'Ak and Swan, O'Ak at Seneca, O'Ak at Swan, Seneca & Main, Seneca & O'Ak, Seneca & Washington, Seneca & West Seneca, Seneca and Main, Seneca and O'Ak, Seneca and Washington, Seneca and West Seneca, Seneca at Main, Seneca at O'Ak, Seneca at Washington, Seneca at West Seneca, Swan & Ellicott, Swan & O'Ak, Swan & Washington, Swan and Ellicott, Swan and O'Ak, Swan and Washington, Swan at Ellicott, Swan at O'Ak, Swan at Washington, Swan St, Swan Street, W Seneca St, W Swan St, Washington & Seneca, Washington & Swan, Washington and Seneca, Washington and Swan, Washington at Seneca, Washington at Swan, West Seneca & Main, West Seneca & Seneca, West Seneca and Main, West Seneca and Seneca, West Seneca at Main, West Seneca at Seneca, West Seneca St, West Seneca Street, West Swan St, West Swan Street]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: highmark_stadium
     name: Highmark Stadium (Buffalo Bills) — new stadium, Orchard Park
@@ -73,6 +77,7 @@ facilities:
     priority: 1
     aliases: ["Highmark Stadium", "new Bills stadium", "Bills stadium", "Bills Mafia", "#BillsMafia", "Buffalo Bills", "Abbott Road", "Abbott Rd"]
     ambiguous: ["Bills game", "the stadium", "tailgate", "tailgating"]
+    nearby: [Abbott Rd, Abbott Road]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: canalside
     name: Canalside
@@ -84,6 +89,7 @@ facilities:
     priority: 1
     aliases: ["Canalside", "Canal Side", "Erie Canal Harbor", "Commercial Slip", "Ice at Canalside", "#Canalside"]
     ambiguous: []
+    nearby: [Lloyd & Marine, Lloyd & Prime, Lloyd and Marine, Lloyd and Prime, Lloyd at Marine, Lloyd at Prime, Marine & Lloyd, Marine & Naval Park Cv, Marine & Pearl, Marine and Lloyd, Marine and Naval Park Cv, Marine and Pearl, Marine at Lloyd, Marine at Naval Park Cv, Marine at Pearl, Naval Park Cv & Marine, Naval Park Cv and Marine, Naval Park Cv at Marine, Pearl & Marine, Pearl and Marine, Pearl at Marine, Prime & Lloyd, Prime and Lloyd, Prime at Lloyd]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: keybank_center
     name: KeyBank Center (Buffalo Sabres)
@@ -95,6 +101,7 @@ facilities:
     priority: 1
     aliases: ["KeyBank Center", "Key Bank Center", "Key Bank Arena", "KeyBank Arena", "Buffalo Sabres", "#Sabres", "#LetsGoBuffalo", "First Niagara Center", "HSBC Arena"]
     ambiguous: ["Sabres", "the Arena", "Perry St"]
+    nearby: [Illinois & Perry, Illinois and Perry, Illinois at Perry, Illinois St, Illinois Street, Main & Prime, Main & South Park, Main and Prime, Main and South Park, Main at Prime, Main at South Park, Mississippi St, Mississippi Street, Perry & Illinois, Perry & Washington, Perry and Illinois, Perry and Washington, Perry at Illinois, Perry at Washington, Perry St, Perry Street, Prime & Main, Prime and Main, Prime at Main, S Park Ave, South Park & Main, South Park and Main, South Park at Main, South Park Ave, South Park Avenue, Washington & Perry, Washington and Perry, Washington at Perry]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: naval_park
     name: Buffalo & Erie County Naval & Military Park
@@ -106,6 +113,7 @@ facilities:
     priority: 2
     aliases: ["Buffalo Naval Park", "Naval Park", "Naval and Military Park", "USS The Sullivans", "USS Little Rock", "USS Croaker"]
     ambiguous: ["naval museum", "naval ships"]
+    nearby: []  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: explore_and_more
     name: Explore & More Children's Museum
@@ -117,6 +125,7 @@ facilities:
     priority: 2
     aliases: ["Explore & More", "Explore and More", "Explore & More Children's Museum", "Ralph C. Wilson Jr. Children's Museum"]
     ambiguous: ["children's museum"]
+    nearby: [Exchange & Main, Exchange & Upper, Exchange and Main, Exchange and Upper, Exchange at Main, Exchange at Upper, Main & Exchange, Main & Marine, Main & Scott, Main & Upper, Main and Exchange, Main and Marine, Main and Scott, Main and Upper, Main at Exchange, Main at Marine, Main at Scott, Main at Upper, Marine & Main, Marine and Main, Marine at Main, Scott & Main, Scott & Washington, Scott and Main, Scott and Washington, Scott at Main, Scott at Washington, Upper & Exchange, Upper & Main, Upper and Exchange, Upper and Main, Upper at Exchange, Upper at Main, Washington & Scott, Washington and Scott, Washington at Scott]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: convention_center
     name: Buffalo Niagara Convention Center
@@ -128,6 +137,7 @@ facilities:
     priority: 2
     aliases: ["Buffalo Convention Center", "Buffalo Niagara Convention Center", "Convention Center Buffalo"]
     ambiguous: ["convention center"]
+    nearby: [Bean & West Mohawk, Bean and West Mohawk, Bean at West Mohawk, Court & Niagara, Court and Niagara, Court at Niagara, Delaware & West Mohawk, Delaware and West Mohawk, Delaware at West Mohawk, Franklin & Genesee, Franklin & West Mohawk, Franklin and Genesee, Franklin and West Mohawk, Franklin at Genesee, Franklin at West Mohawk, Genesee & Franklin, Genesee & Niagara, Genesee and Franklin, Genesee and Niagara, Genesee at Franklin, Genesee at Niagara, Niagara & Court, Niagara & Genesee, Niagara and Court, Niagara and Genesee, Niagara at Court, Niagara at Genesee, West Mohawk & Bean, West Mohawk & Delaware, West Mohawk & Franklin, West Mohawk and Bean, West Mohawk and Delaware, West Mohawk and Franklin, West Mohawk at Bean, West Mohawk at Delaware, West Mohawk at Franklin]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: entertainment_district
     name: Downtown Entertainment District
@@ -139,6 +149,7 @@ facilities:
     priority: 1
     aliases: ["Chippewa Street", "Chippewa St", "Theatre District", "Theater District", "Entertainment District", "Shea's", "Sheas Buffalo"]
     ambiguous: ["Chippewa", "downtown"]
+    nearby: [Asbury & Pearl, Asbury Alley, Asbury Aly, Asbury and Pearl, Asbury at Pearl, Curtain Up & Pearl, Curtain Up Alley, Curtain Up Aly, Curtain Up and Pearl, Curtain Up at Pearl, Delaware & Johnson Park, Delaware & Tracy, Delaware and Johnson Park, Delaware and Tracy, Delaware at Johnson Park, Delaware at Tracy, E Tupper St, East Tupper St, East Tupper Street, Franklin & West Tupper, Franklin and West Tupper, Franklin at West Tupper, Johnson Park & Delaware, Johnson Park and Delaware, Johnson Park at Delaware, Pearl & Asbury, Pearl & Curtain Up, Pearl & West Tupper, Pearl and Asbury, Pearl and Curtain Up, Pearl and West Tupper, Pearl at Asbury, Pearl at Curtain Up, Pearl at West Tupper, Tracy & Delaware, Tracy and Delaware, Tracy at Delaware, Tracy St, Tracy Street, W Chippewa St, W Tupper St, West Chippewa St, West Chippewa Street, West Tupper & Franklin, West Tupper & Pearl, West Tupper and Franklin, West Tupper and Pearl, West Tupper at Franklin, West Tupper at Pearl, West Tupper St, West Tupper Street]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: mlk_park
     name: Martin Luther King Jr. Park
@@ -150,6 +161,7 @@ facilities:
     priority: 3
     aliases: ["MLK Park", "Martin Luther King Park", "Martin Luther King Jr. Park", "Humboldt Park"]
     ambiguous: []
+    nearby: [Best & Fillmore, Best and Fillmore, Best at Fillmore, Fillmore & Best, Fillmore & Genesee, Fillmore & Humboldt Pkwy S, Fillmore & Peterson, Fillmore and Best, Fillmore and Genesee, Fillmore and Humboldt Pkwy S, Fillmore and Peterson, Fillmore at Best, Fillmore at Genesee, Fillmore at Humboldt Pkwy S, Fillmore at Peterson, Genesee & Fillmore, Genesee & Myers, Genesee & Wilson, Genesee and Fillmore, Genesee and Myers, Genesee and Wilson, Genesee at Fillmore, Genesee at Myers, Genesee at Wilson, Humboldt Pkwy S & Fillmore, Humboldt Pkwy S and Fillmore, Humboldt Pkwy S at Fillmore, Myers & Genesee, Myers and Genesee, Myers at Genesee, Myers St, Myers Street, Peterson & Fillmore, Peterson and Fillmore, Peterson at Fillmore, Peterson St, Peterson Street, Strauss St, Strauss Street, Sweeney St, Sweeney Street, Wilson & Genesee, Wilson and Genesee, Wilson at Genesee]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: outer_harbor
     name: Buffalo Outer Harbor
@@ -161,6 +173,7 @@ facilities:
     priority: 1
     aliases: ["Outer Harbor", "Outer Harbour", "Fuhrmann Blvd", "Fuhrmann Boulevard", "Buffalo Harbor State Park", "Gallagher Beach", "Wilkeson Pointe", "Seaway Pier", "Terminal B", "Marine Drive"]
     ambiguous: ["waterfront", "boardwalk"]
+    nearby: [Fuhrmann Blvd, Fuhrmann Boulevard, Ganson St, Ganson Street]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: jcc_delaware
     name: JCC of Greater Buffalo — Benderson Family Building (Delaware Ave)
@@ -172,6 +185,7 @@ facilities:
     priority: 1
     aliases: ["Jewish Community Center", "JCC Buffalo", "JCC of Greater Buffalo", "Benderson Family Building", "787 Delaware"]
     ambiguous: ["JCC", "Jewish Center", "synagogue"]
+    nearby: [Delaware & North, Delaware & Summer, Delaware and North, Delaware and Summer, Delaware at North, Delaware at Summer, Franklin & North, Franklin and North, Franklin at North, Linwood Ave, Linwood Avenue, Mayfair Lane, Mayfair Ln, N Pearl St, North & Delaware, North & Franklin, North and Delaware, North and Franklin, North at Delaware, North at Franklin, North Pearl St, North Pearl Street, Summer & Delaware, Summer and Delaware, Summer at Delaware]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: jcc_getzville
     name: JCC of Greater Buffalo — Holland Family Building (Getzville)
@@ -183,6 +197,7 @@ facilities:
     priority: 1
     aliases: ["Holland Family Building", "JCC Getzville", "JCC Amherst", "2640 North Forest"]
     ambiguous: ["JCC", "Jewish Center"]
+    nearby: [Dodge Rd, Dodge Road]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: public_safety_campus
     name: 45 Elm Street (Public Safety Campus)
@@ -194,6 +209,7 @@ facilities:
     priority: 2
     aliases: ["45 Elm Street", "45 Elm St", "Public Safety Campus"]
     ambiguous: []
+    nearby: [Arsenal & Michigan, Arsenal and Michigan, Arsenal at Michigan, Arsenal Pl, Arsenal Place, Broadway & O'Ak, Broadway and O'Ak, Broadway at O'Ak, Clinton & Elm, Clinton & Michigan, Clinton & O'Ak, Clinton and Elm, Clinton and Michigan, Clinton and O'Ak, Clinton at Elm, Clinton at Michigan, Clinton at O'Ak, East Eagle & Elm, East Eagle and Elm, East Eagle at Elm, Elm & Clinton, Elm & East Eagle, Elm & William, Elm and Clinton, Elm and East Eagle, Elm and William, Elm at Clinton, Elm at East Eagle, Elm at William, Mead Alley, Mead Aly, Michigan & Arsenal, Michigan & Clinton, Michigan & William, Michigan and Arsenal, Michigan and Clinton, Michigan and William, Michigan at Arsenal, Michigan at Clinton, Michigan at William, Michigan Ave, Michigan Avenue, O'Ak & Broadway, O'Ak & Clinton, O'Ak & William, O'Ak and Broadway, O'Ak and Clinton, O'Ak and William, O'Ak at Broadway, O'Ak at Clinton, O'Ak at William, William & Elm, William & Michigan, William & O'Ak, William and Elm, William and Michigan, William and O'Ak, William at Elm, William at Michigan, William at O'Ak]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: niagara_square
     name: Niagara Square
@@ -205,6 +221,7 @@ facilities:
     priority: 1
     aliases: ["Niagara Square", "McKinley Monument"]
     ambiguous: []
+    nearby: [Delaware & Niagara, Delaware and Niagara, Delaware at Niagara, Jerge & Niagara, Jerge and Niagara, Jerge at Niagara, Niagara & Delaware, Niagara & Jerge, Niagara & Perkins, Niagara and Delaware, Niagara and Jerge, Niagara and Perkins, Niagara at Delaware, Niagara at Jerge, Niagara at Perkins, Perkins & Niagara, Perkins and Niagara, Perkins at Niagara]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: buffalo_police
     name: Buffalo Police Department HQ
@@ -217,6 +234,7 @@ facilities:
     priority: 1
     aliases: ["Buffalo police headquarters", "Buffalo Police HQ", "BPD headquarters", "68 Court St", "68 Court Street"]
     ambiguous: ["police headquarters", "police HQ"]   # plain "Buffalo Police" left out: it appears in almost every crime story
+    nearby: []  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: city_hall
     name: Buffalo City Hall
@@ -228,6 +246,7 @@ facilities:
     priority: 1
     aliases: ["Buffalo City Hall", "65 Niagara Square", "Buffalo Common Council"]
     ambiguous: ["City Hall", "Common Council"]
+    nearby: [7th & Court, 7th and Court, 7th at Court, Court & 7th, Court & South Elmwood, Court & Staats, Court and 7th, Court and South Elmwood, Court and Staats, Court at 7th, Court at South Elmwood, Court at Staats, Perkins & South Elmwood, Perkins and South Elmwood, Perkins at South Elmwood, South Elmwood & Court, South Elmwood & Perkins, South Elmwood and Court, South Elmwood and Perkins, South Elmwood at Court, South Elmwood at Perkins, Staats & Court, Staats and Court, Staats at Court]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: federal_courthouse
     name: Robert H. Jackson U.S. Courthouse
@@ -239,6 +258,7 @@ facilities:
     priority: 1
     aliases: ["Federal Courthouse Buffalo", "Robert H. Jackson Courthouse", "Jackson Courthouse", "2 Niagara Square", "Michael J. Dillon Courthouse", "WDNY federal court"]
     ambiguous: ["federal courthouse", "federal court"]
+    nearby: [Jerge & South Elmwood, Jerge and South Elmwood, Jerge at South Elmwood, Niagara & South Elmwood, Niagara & West Mohawk, Niagara and South Elmwood, Niagara and West Mohawk, Niagara at South Elmwood, Niagara at West Mohawk, Rabin Ter, Rabin Terrace, South Elmwood & Jerge, South Elmwood & Niagara, South Elmwood & West Mohawk, South Elmwood and Jerge, South Elmwood and Niagara, South Elmwood and West Mohawk, South Elmwood at Jerge, South Elmwood at Niagara, South Elmwood at West Mohawk, W Huron St, West Huron St, West Huron Street, West Mohawk & Niagara, West Mohawk & South Elmwood, West Mohawk and Niagara, West Mohawk and South Elmwood, West Mohawk at Niagara, West Mohawk at South Elmwood]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: rath_building
     name: Rath Building (Erie County government)
@@ -250,6 +270,7 @@ facilities:
     priority: 2
     aliases: ["Rath Building", "Edward A. Rath County Office Building", "95 Franklin St"]
     ambiguous: []
+    nearby: [Court & Franklin, Court & Pearl, Court and Franklin, Court and Pearl, Court at Franklin, Court at Pearl, Franklin & Court, Franklin and Court, Franklin at Court, Pearl & Court, Pearl and Court, Pearl at Court]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: holding_center
     name: Erie County Holding Center
@@ -261,6 +282,7 @@ facilities:
     priority: 2
     aliases: ["Erie County Holding Center", "Holding Center", "40 Delaware Ave"]
     ambiguous: []
+    nearby: [Lower Ter & South Elmwood, Lower Ter & West Eagle, Lower Ter and South Elmwood, Lower Ter and West Eagle, Lower Ter at South Elmwood, Lower Ter at West Eagle, South Elmwood & Lower Ter, South Elmwood & West Eagle, South Elmwood and Lower Ter, South Elmwood and West Eagle, South Elmwood at Lower Ter, South Elmwood at West Eagle, West Eagle & Lower Ter, West Eagle & South Elmwood, West Eagle and Lower Ter, West Eagle and South Elmwood, West Eagle at Lower Ter, West Eagle at South Elmwood]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: sheriffs_office
     name: Erie County Sheriff's Office
@@ -273,6 +295,7 @@ facilities:
     priority: 2
     aliases: ["Erie County Sheriff's Office headquarters", "Sheriff's Office headquarters", "10 Delaware Ave", "10 Delaware Avenue"]
     ambiguous: ["sheriff's headquarters"]   # plain "Erie County Sheriff" left out: too common in routine news
+    nearby: [Church & Delaware, Church & Franklin, Church & Lower Ter, Church & Upper Terrace, Church and Delaware, Church and Franklin, Church and Lower Ter, Church and Upper Terrace, Church at Delaware, Church at Franklin, Church at Lower Ter, Church at Upper Terrace, Delaware & Church, Delaware & West Eagle, Delaware and Church, Delaware and West Eagle, Delaware at Church, Delaware at West Eagle, Franklin & Church, Franklin and Church, Franklin at Church, Lower Ter & Church, Lower Ter & Upper Terrace, Lower Ter and Church, Lower Ter and Upper Terrace, Lower Ter at Church, Lower Ter at Upper Terrace, Upper Ter St, Upper Ter Street, Upper Terrace & Church, Upper Terrace & Lower Ter, Upper Terrace and Church, Upper Terrace and Lower Ter, Upper Terrace at Church, Upper Terrace at Lower Ter, West Eagle & Delaware, West Eagle and Delaware, West Eagle at Delaware]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: board_of_elections
     name: Erie County Board of Elections
@@ -284,6 +307,7 @@ facilities:
     priority: 1
     aliases: ["Erie County Board of Elections", "Board of Elections", "134 West Eagle", "134 W Eagle"]
     ambiguous: ["polling site", "ballots", "election office"]
+    nearby: [East Eagle & Main, East Eagle and Main, East Eagle at Main, Franklin & Niagara, Franklin & West Eagle, Franklin and Niagara, Franklin and West Eagle, Franklin at Niagara, Franklin at West Eagle, Main & East Eagle, Main and East Eagle, Main at East Eagle, N Division St, Niagara & Franklin, Niagara & West Eagle, Niagara and Franklin, Niagara and West Eagle, Niagara at Franklin, Niagara at West Eagle, North Division St, North Division Street, Pearl & West Eagle, Pearl and West Eagle, Pearl at West Eagle, West Eagle & Franklin, West Eagle & Niagara, West Eagle & Pearl, West Eagle and Franklin, West Eagle and Niagara, West Eagle and Pearl, West Eagle at Franklin, West Eagle at Niagara, West Eagle at Pearl]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: riverworks
     name: RiverWorks
@@ -295,6 +319,7 @@ facilities:
     priority: 2
     aliases: ["RiverWorks", "Buffalo RiverWorks", "Ganson St", "Ganson Street"]
     ambiguous: []
+    nearby: [Kentucky & Mackinaw, Kentucky & O'Connell, Kentucky and Mackinaw, Kentucky and O'Connell, Kentucky at Mackinaw, Kentucky at O'Connell, Kentucky St, Kentucky Street, Louisiana & Mackinaw, Louisiana & Miami, Louisiana & O'Connell, Louisiana and Mackinaw, Louisiana and Miami, Louisiana and O'Connell, Louisiana at Mackinaw, Louisiana at Miami, Louisiana at O'Connell, Louisiana St, Louisiana Street, Mackinaw & Kentucky, Mackinaw & Louisiana, Mackinaw and Kentucky, Mackinaw and Louisiana, Mackinaw at Kentucky, Mackinaw at Louisiana, Mackinaw St, Mackinaw Street, Miami & Louisiana, Miami and Louisiana, Miami at Louisiana, Miami St, Miami Street, O'Connell & Kentucky, O'Connell & Louisiana, O'Connell and Kentucky, O'Connell and Louisiana, O'Connell at Kentucky, O'Connell at Louisiana, O'Connell Ave, O'Connell Avenue, Tennessee St, Tennessee Street]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: intl_rail_bridge
     name: International Railway Bridge (Black Rock — Fort Erie)
@@ -306,6 +331,7 @@ facilities:
     priority: 1
     aliases: ["International Railway Bridge", "International Rail Bridge", "Black Rock rail bridge", "Black Rock Canal", "CN rail bridge Fort Erie"]
     ambiguous: ["rail bridge", "Fort Erie"]
+    nearby: [Dann St, Dann Street]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review
 
   - id: fire_hq
     name: Buffalo Fire Department HQ
@@ -318,3 +344,4 @@ facilities:
     priority: 2
     aliases: ["Buffalo Fire HQ", "Buffalo Fire Headquarters", "Buffalo Fire Department headquarters", "195 Court St"]
     ambiguous: ["fire headquarters", "BFD headquarters"]
+    nearby: [Broadway & Ellicott, Broadway & Lafayette, Broadway & Washington, Broadway & William, Broadway and Ellicott, Broadway and Lafayette, Broadway and Washington, Broadway and William, Broadway at Ellicott, Broadway at Lafayette, Broadway at Washington, Broadway at William, Clinton & Ellicott, Clinton & Lafayette, Clinton & Washington, Clinton and Ellicott, Clinton and Lafayette, Clinton and Washington, Clinton at Ellicott, Clinton at Lafayette, Clinton at Washington, Court & Lafayette, Court & Main, Court and Lafayette, Court and Main, Court at Lafayette, Court at Main, East Eagle & Washington, East Eagle and Washington, East Eagle at Washington, East Mohawk & Washington, East Mohawk and Washington, East Mohawk at Washington, Ellicott & Broadway, Ellicott & Clinton, Ellicott & William, Ellicott and Broadway, Ellicott and Clinton, Ellicott and William, Ellicott at Broadway, Ellicott at Clinton, Ellicott at William, Lafayette & Broadway, Lafayette & Clinton, Lafayette & Court, Lafayette & Main, Lafayette & Washington, Lafayette and Broadway, Lafayette and Clinton, Lafayette and Court, Lafayette and Main, Lafayette and Washington, Lafayette at Broadway, Lafayette at Clinton, Lafayette at Court, Lafayette at Main, Lafayette at Washington, Main & Court, Main & Lafayette, Main and Court, Main and Lafayette, Main at Court, Main at Lafayette, Washington & Broadway, Washington & Clinton, Washington & East Eagle, Washington & East Mohawk, Washington & Lafayette, Washington and Broadway, Washington and Clinton, Washington and East Eagle, Washington and East Mohawk, Washington and Lafayette, Washington at Broadway, Washington at Clinton, Washington at East Eagle, Washington at East Mohawk, Washington at Lafayette, William & Broadway, William & Ellicott, William and Broadway, William and Ellicott, William at Broadway, William at Ellicott]  # streets near this site only, and intersections; generated 2026-11-17 from Census TIGER, review

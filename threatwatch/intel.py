@@ -19,12 +19,13 @@ from .models import ALERT_TIERS, REVIEW_TIERS, tier_rank
 from .store import INACTIVE, OPEN, STATUS_LABEL
 
 COVERAGE = {
-    "news": "Google News and Bing News search per site, threat-term sweeps for Buffalo/Erie County, and 8 local outlet feeds. Published stories only, usually 30 min to hours after events.",
-    "gdelt": "GDELT global news index (updated every 15 min): national, trade and international outlets the news search misses. Headlines only.",
+    "news": "Google News and Bing News search per site, threat-term sweeps for Buffalo/Erie County, federal-court searches, and 11 local outlet feeds. Promising items are read in full. Published stories only, usually 30 min to hours after events.",
+    "gdelt": "GDELT 15-minute event files: news articles coded as threats, protests or violence and geocoded within 40 km of Buffalo. A few articles a day.",
     "tfr": "FAA temporary flight restrictions over the Buffalo area (VIP visits, security, hazards). The standing NFL stadium restriction is permanent and not listed.",
     "mastodon": "Public Mastodon posts with Buffalo hashtags. Small audience; useful as an extra open channel.",
     "nws": "NWS alerts for Erie County (NYC029) and the Buffalo Lake Erie marine zone (LEZ020).",
-    "bluesky": "Public Bluesky posts that name a site. Small share of local social media.",
+    "bluesky": "Public Bluesky posts that name a site, plus threat-term searches (no key needed). Small share of local social media.",
+    "gatherings": "Publicly announced in-person rallies, marches and town halls within 1 km of a site (Mobilize). Crowd context only; many gatherings are never listed there.",
     "opendata": "Buffalo Police incidents inside site geofences. City of Buffalo only (not Orchard Park or Getzville). Published with a lag of a day or more.",
     "ny511": "NYSDOT crashes, closures and incidents within ~0.4 km of a site.",
     "schedules": "Sabres home games (NHL) and Bills home games (ESPN), plus events you add. Other venues need manual entries or Ticketmaster.",

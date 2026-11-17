@@ -68,6 +68,8 @@ def cmd_selftest(args):
             extra = ""
             if c.name == "events":
                 extra = f", {tmp.get_state('events_last_count', 0)} events stored"
+            if c.name == "gatherings":
+                extra = f", {tmp.get_state('gatherings_last_count', 0)} public gatherings near sites in the next 14 days"
             if c.name == "schedules":
                 extra = f", {tmp.get_state('schedules_last_count', 0)} home games/events in the next 14 days"
             if c.name == "news" and getattr(c, "stats", None):
@@ -122,6 +124,8 @@ def cmd_scan(args):
             d = r.delivery[k]
             print(f"  {OK if d['ok'] else FAIL} {d['message']}")
     print("  per source: " + ", ".join(f"{k} {v}" for k, v in r.per_source.items()))
+    if r.articles.get("tried"):
+        print(f"  full article text: {r.articles['fetched']} of {r.articles['tried']} promising items")
     for p in r.export_paths:
         print("  Excel log:", p)
     for k, v in r.not_configured.items():

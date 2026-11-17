@@ -15,6 +15,7 @@ from .scoring import score_match
 from .store import Store, window_start
 
 log = logging.getLogger("threatwatch")
+CONTEXT_SOURCES = ("schedules", "events", "gatherings")   # store scheduled events, run before the rest
 
 
 @dataclass
@@ -32,6 +33,7 @@ class ScanResult:
     source_detail: dict = field(default_factory=dict)   # source -> {state, seconds, error}
     collection: list = field(default_factory=list)      # one row per collected item (see Store.log_collection)
     warnings: dict[str, str] = field(default_factory=dict)   # source -> partial problem (source still ran)
+    articles: dict = field(default_factory=dict)         # {"fetched", "tried"}: full article text this scan
     kind: str = "full"                                   # "full" or "light" (hourly, fast sources only)
 
     def tier_counts(self) -> dict[str, int]:
@@ -107,7 +109,7 @@ def _record(store: Store, result: "ScanResult", name: str, got=None, exc=None, s
     """note: a partial problem in a source that still returned (e.g. one feed of eleven failed)."""
     if exc is None:
         n = len(got)
-        if name in ("schedules", "events"):   # these store events instead of returning posts
+        if name in CONTEXT_SOURCES:   # these store events instead of returning posts
             n = int(store.get_state(f"{name}_last_count", 0) or 0)
         latest = max((p.created_at for p in got), default=None)
         result.per_source[name] = len(got)
@@ -143,7 +145,7 @@ def collect_all(collectors, ctx: CollectContext, store: Store, result: "ScanResu
     from .store import LockedStore
 
     posts: list[Post] = []
-    first = [c for c in collectors if c.name in ("schedules", "events")]
+    first = [c for c in collectors if c.name in CONTEXT_SOURCES]
     rest = [c for c in collectors if c not in first]
     for c in first:
         t0 = time.monotonic()
@@ -221,6 +223,11 @@ def run_scan(send_alerts: bool = True, store: Store | None = None, light: bool =
     store = store or Store()
     matcher = Matcher(facilities, keywords)
     lookback = float(sources.get("scan", {}).get("lookback_hours", 24))
+    if not light:   # a full scan covers everything since the previous full scan, up to catchup_max_hours
+        last_full = store.last_scan_finished("full")
+        if last_full:
+            gap_h = (utcnow() - last_full).total_seconds() / 3600 + 1
+            lookback = max(lookback, min(gap_h, float(sources.get("scan", {}).get("catchup_max_hours", 72))))
     ctx = CollectContext(facilities, keywords, sources, store, window_start(lookback))
 
     result = ScanResult(kind="light" if light else "full")
@@ -229,6 +236,12 @@ def run_scan(send_alerts: bool = True, store: Store | None = None, light: bool =
                             budget_s=float(sources.get("scan", {}).get("max_seconds", 300)),
                             workers=int(sources.get("scan", {}).get("parallel_sources", 8)))
     result.collected = len(all_posts)
+    try:   # read the full article for the most promising new items before matching (threatwatch/article.py)
+        from .article import enrich
+        result.articles = enrich(all_posts, matcher, sources.get("scan", {}).get("article_text", {}),
+                                 is_new=lambda p: not store.is_stored(p))
+    except Exception as e:
+        result.warnings["articles"] = f"article text skipped: {str(e)[:200]}"
     lock = getattr(store, "lock", None)   # held from here on, in case a timed-out source still writes
     if lock:
         lock.acquire()
@@ -272,7 +285,8 @@ def _finish(result, all_posts, store, matcher, sources, started, send_alerts) ->
     store.log_scan(started, result.collected, result.new_posts, len(result.hits),
                    result.alerts_sent, result.errors,
                    {"per_source": result.per_source, "not_configured": result.not_configured,
-                    "warnings": result.warnings, "kind": result.kind}, scan_id=result.scan_id)
+                    "warnings": result.warnings, "kind": result.kind, "articles": result.articles},
+                   scan_id=result.scan_id)
     try:   # Excel log of Alert/Watch items, same format every scan
         important = [h for h in result.hits if h.tier in REVIEW_TIERS]
         ids = [r["id"] for r in store.conn.execute(
@@ -309,6 +323,10 @@ def auto_reason(store: Store, sources_cfg: dict, now=None) -> str | None:
     local = now.astimezone(ZoneInfo(cfg.get("timezone", "America/New_York")))
     if local.hour in cfg.get("base_hours", [7, 15]):
         return f"scheduled {local:%H}:00 scan"
+    last = store.last_scan_finished()
+    gap_h = (now - last).total_seconds() / 3600 if last else None
+    if gap_h is not None and gap_h > float(cfg.get("catchup_after_hours", 2)):
+        return f"catching up: no scan for {gap_h:.0f} h (computer asleep or offline)"
     ev = store.events_between(now - timedelta(hours=float(cfg.get("event_after_hours", 3))),
                               now + timedelta(hours=float(cfg.get("event_before_hours", 6))))
     if ev:
@@ -339,7 +357,8 @@ def rescore(store: Store, days: float = 7) -> dict:
     for r in rows:
         post = Post(r["source"], r["source_name"], r["native_id"], r["url"], r["text"],
                     datetime.fromisoformat(r["created_at"]), r["author"] or "", r["reliability"] or "D",
-                    bool(r["is_local"]), lat=r["lat"], lon=r["lon"])
+                    bool(r["is_local"]), lat=r["lat"], lon=r["lon"],
+                    body=(r["body"] if "body" in r.keys() else "") or "")
         m = matcher.match(post)
         if not m.is_hit or r["facility_id"] not in m.facilities:
             store.update_hit(r["id"], status="closed", note="Closed automatically: no longer matches the current rules.",

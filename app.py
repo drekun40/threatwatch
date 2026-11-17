@@ -847,7 +847,7 @@ def source_setup() -> None:
             st.rerun()
 
     with st.expander("Free sources — feeds, searches, hashtags"):
-        free = ["news", "gdelt", "nws", "tfr", "mastodon", "bluesky", "opendata", "adsb", "schedules"]
+        free = ["news", "gdelt", "nws", "tfr", "mastodon", "bluesky", "gatherings", "opendata", "adsb", "schedules"]
         cols = st.columns(4)
         flags = {n: cols[i % 4].toggle(n, value=bool(srcs.get(n, {}).get("enabled")), key=f"free_{n}")
                  for i, n in enumerate(free)}
